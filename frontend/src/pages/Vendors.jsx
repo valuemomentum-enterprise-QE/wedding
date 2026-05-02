@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { Phone, Mail, MapPin, DollarSign, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, DollarSign, CheckCircle2, XCircle, Clock, Users } from 'lucide-react';
 
 const VENDOR_CATEGORIES = [
   'Venue', 'Catering', 'Photography', 'Videography', 'Decoration', 'Audio/DJ',

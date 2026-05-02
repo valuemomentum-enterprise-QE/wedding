@@ -85,11 +85,29 @@ export const Guests = () => {
     toast.success('Guest removed!');
   };
 
-  const generateRSVPLink = () => {
+  const generateRSVPLink = async () => {
     const baseUrl = window.location.origin;
     const rsvpLink = `${baseUrl}/rsvp?wedding=jd-jc-2026`;
-    navigator.clipboard.writeText(rsvpLink);
-    toast.success('RSVP link copied to clipboard!');
+    
+    try {
+      await navigator.clipboard.writeText(rsvpLink);
+      toast.success('RSVP link copied to clipboard!');
+    } catch (err) {
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = rsvpLink;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        toast.success('RSVP link copied to clipboard!');
+      } catch (e) {
+        toast.error('Could not copy link. Please copy manually: ' + rsvpLink);
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   const stats = {
