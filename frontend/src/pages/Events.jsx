@@ -26,7 +26,6 @@ export const Events = () => {
           time: 'All Day',
           venue: 'Airbnb',
           description: 'Family and guests arrival',
-          image: 'https://images.unsplash.com/photo-1587271407850-8d438ca9fdf2',
           type: 'preparation'
         },
         {
@@ -36,7 +35,6 @@ export const Events = () => {
           time: 'Evening',
           venue: 'Outside',
           description: 'Ring ceremony and music celebration',
-          image: 'https://images.pexels.com/photos/36782322/pexels-photo-36782322.jpeg',
           type: 'celebration'
         },
         {
@@ -46,7 +44,6 @@ export const Events = () => {
           time: 'Morning',
           venue: 'Airbnb',
           description: 'Traditional pre-wedding ritual',
-          image: 'https://images.unsplash.com/photo-1587271636175-90d58cdad458',
           type: 'ceremony'
         },
         {
@@ -56,7 +53,6 @@ export const Events = () => {
           time: 'Afternoon',
           venue: 'Airbnb',
           description: 'Turmeric ceremony for bride and groom',
-          image: 'https://images.pexels.com/photos/30184716/pexels-photo-30184716.jpeg',
           type: 'ceremony'
         },
         {
@@ -66,7 +62,6 @@ export const Events = () => {
           time: 'Evening',
           venue: 'Airbnb',
           description: 'Henna application ceremony',
-          image: 'https://images.unsplash.com/photo-1533939361134-4135bbb3658c',
           type: 'ceremony'
         },
         {
@@ -76,7 +71,6 @@ export const Events = () => {
           time: 'Early Morning',
           venue: 'Wedding Hall',
           description: 'Main wedding ceremony',
-          image: 'https://images.unsplash.com/photo-1587271636175-90d58cdad458',
           type: 'wedding'
         },
         {
@@ -86,7 +80,6 @@ export const Events = () => {
           time: 'Evening',
           venue: 'Wedding Hall',
           description: 'Wedding reception and dinner',
-          image: 'https://images.unsplash.com/photo-1587271407850-8d438ca9fdf2',
           type: 'celebration'
         },
         {
@@ -96,7 +89,6 @@ export const Events = () => {
           time: 'Morning',
           venue: 'Temple/Airbnb',
           description: 'Post-wedding ritual',
-          image: 'https://images.unsplash.com/photo-1587271636175-90d58cdad458',
           type: 'ceremony'
         }
       ];
@@ -148,26 +140,19 @@ export const Events = () => {
 
                 {/* Event card */}
                 <Card className="flex-1 card-elegant hover:shadow-[var(--shadow-medium)] transition-shadow">
-                  <div className="relative">
-                    {event.image && (
-                      <div className="h-48 md:h-64 rounded-t-xl overflow-hidden">
-                        <img
-                          src={event.image}
-                          alt={event.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
-                        <Badge className={`absolute top-4 right-4 ${getEventTypeColor(event.type)}`}>
-                          {event.type}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
                   <CardContent className="pt-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <Badge className={`${getEventTypeColor(event.type)}`}>
+                        {event.type}
+                      </Badge>
+                    </div>
+                    
                     <h3 className="text-xl font-semibold mb-3">{event.name}</h3>
+                    
                     {event.description && (
                       <p className="text-sm text-muted-foreground mb-4">{event.description}</p>
                     )}
+                    
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Clock className="w-4 h-4" />

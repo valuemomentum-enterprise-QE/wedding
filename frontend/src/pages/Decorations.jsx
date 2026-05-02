@@ -4,7 +4,7 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Search, Heart, ExternalLink, Download, Sparkles } from 'lucide-react';
+import { Search, Heart, ExternalLink, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DECOR_CATEGORIES = [
@@ -26,25 +26,28 @@ export const Decorations = () => {
   }, []);
 
   const loadDecorations = () => {
-    // Curated decoration images from vision_expert_agent
-    const decorImages = [
-      { id: '1', url: 'https://images.unsplash.com/photo-1587271636175-90d58cdad458', category: 'Mandap', title: 'Traditional Mandap Setup' },
-      { id: '2', url: 'https://images.unsplash.com/photo-1587271407850-8d438ca9fdf2', category: 'Mandap', title: 'Elegant Stage Decoration' },
-      { id: '3', url: 'https://images.pexels.com/photos/36782322/pexels-photo-36782322.jpeg', category: 'Stage', title: 'Grand Stage Design' },
-      { id: '4', url: 'https://images.unsplash.com/photo-1661142175513-a5f0871f1ad1', category: 'Marigold', title: 'Marigold Garlands' },
-      { id: '5', url: 'https://images.pexels.com/photos/35249981/pexels-photo-35249981.jpeg', category: 'Marigold', title: 'Marigold Decor' },
-      { id: '6', url: 'https://images.pexels.com/photos/35868454/pexels-photo-35868454.jpeg', category: 'Marigold', title: 'Traditional Marigold' },
-      { id: '7', url: 'https://images.unsplash.com/photo-1612380635121-411eda9ecbb9', category: 'Jasmine', title: 'Jasmine Arrangements' },
-      { id: '8', url: 'https://images.unsplash.com/photo-1623171404570-1d196759fe20', category: 'Jasmine', title: 'Fresh Jasmine Decor' },
-      { id: '9', url: 'https://images.pexels.com/photos/35827217/pexels-photo-35827217.jpeg', category: 'Jasmine', title: 'Jasmine Garlands' },
-      { id: '10', url: 'https://images.unsplash.com/photo-1603026198288-6a94fa57e2af', category: 'Jasmine', title: 'Jasmine Flowers' },
-      { id: '11', url: 'https://images.unsplash.com/photo-1710587385309-f264b4d503cd', category: 'Floral', title: 'Floral Arrangements' },
-      { id: '12', url: 'https://images.unsplash.com/photo-1714631780604-506c00511ec3', category: 'Floral', title: 'Modern Floral Design' },
-      { id: '13', url: 'https://images.unsplash.com/photo-1717980651512-6470dba293a1', category: 'Floral', title: 'Elegant Flowers' },
-      { id: '14', url: 'https://images.pexels.com/photos/35546896/pexels-photo-35546896.jpeg', category: 'Floral', title: 'Floral Centerpieces' },
-      { id: '15', url: 'https://images.unsplash.com/photo-1597157639073-69284dc0fdaf', category: 'Entrance', title: 'Entrance Decoration' },
+    // Text-based decoration ideas for South Indian wedding
+    const decorIdeas = [
+      { id: '1', category: 'Mandap', title: 'Traditional Mandap Setup', description: 'Four-pillar mandap with floral decorations, silk drapes in red and gold' },
+      { id: '2', category: 'Mandap', title: 'Elegant Stage Decoration', description: 'Raised platform with backdrop, chandelier, and flower arrangements' },
+      { id: '3', category: 'Stage', title: 'Grand Stage Design', description: 'Multi-level stage with LED lighting, cascading flowers, and traditional elements' },
+      { id: '4', category: 'Marigold', title: 'Marigold Garlands', description: 'Fresh marigold string decorations for entrance and mandap pillars' },
+      { id: '5', category: 'Marigold', title: 'Marigold Decor', description: 'Marigold flower arrangements in brass urns, traditional kolam patterns' },
+      { id: '6', category: 'Marigold', title: 'Traditional Marigold', description: 'Orange and yellow marigold torans for doorways and arches' },
+      { id: '7', category: 'Jasmine', title: 'Jasmine Arrangements', description: 'White jasmine strings for hair decoration and venue ambiance' },
+      { id: '8', category: 'Jasmine', title: 'Fresh Jasmine Decor', description: 'Jasmine garlands and vases for fragrance and elegance' },
+      { id: '9', category: 'Jasmine', title: 'Jasmine Garlands', description: 'Traditional gajra and malai for bride, groom, and guests' },
+      { id: '10', category: 'Jasmine', title: 'Jasmine Flowers', description: 'Loose jasmine petals for rangoli and table decorations' },
+      { id: '11', category: 'Floral', title: 'Floral Arrangements', description: 'Mixed flower bouquets with roses, lilies, and orchids' },
+      { id: '12', category: 'Floral', title: 'Modern Floral Design', description: 'Contemporary flower installations with tropical elements' },
+      { id: '13', category: 'Floral', title: 'Elegant Flowers', description: 'White and pastel flower combinations for sophisticated look' },
+      { id: '14', category: 'Floral', title: 'Floral Centerpieces', description: 'Table centerpieces with seasonal flowers and candles' },
+      { id: '15', category: 'Entrance', title: 'Entrance Decoration', description: 'Grand entrance arch with flowers, lights, and traditional lamps' },
+      { id: '16', category: 'Entrance', title: 'Welcome Gate', description: 'Decorated entrance with banana leaves and coconut arrangements' },
+      { id: '17', category: 'Stage', title: 'Photo Backdrop', description: 'Customized backdrop for photography with couple names and date' },
+      { id: '18', category: 'Mandap', title: 'Temple-style Mandap', description: 'Traditional South Indian temple-inspired mandap design' },
     ];
-    setDecorations(decorImages);
+    setDecorations(decorIdeas);
   };
 
   const toggleFavorite = (id) => {
@@ -55,12 +58,6 @@ export const Decorations = () => {
     setFavorites(newFavorites);
     localStorage.setItem('favoriteDecor', JSON.stringify(newFavorites));
     toast.success(favorites.includes(id) ? 'Removed from favorites' : 'Added to favorites');
-  };
-
-  const getRowSpan = (index) => {
-    // Vary heights for masonry effect
-    const heights = [20, 25, 30, 22, 28, 26];
-    return heights[index % heights.length];
   };
 
   const filteredDecorations = decorations.filter(decor => {
@@ -117,75 +114,50 @@ export const Decorations = () => {
           </TabsList>
         </Tabs>
 
-        {/* Masonry Grid */}
-        <div className="masonry-grid">
-          {filteredDecorations.map((decor, index) => (
-            <div
+        {/* Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredDecorations.map((decor) => (
+            <Card
               key={decor.id}
-              className="group relative overflow-hidden rounded-xl shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer animate-fade-in"
-              style={{ gridRowEnd: `span ${getRowSpan(index)}` }}
+              className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer animate-fade-in"
             >
-              {/* Image */}
-              <img
-                src={decor.url}
-                alt={decor.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                  {/* Top Actions */}
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => toggleFavorite(decor.id)}
-                      className="w-10 h-10 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform"
-                    >
-                      <Heart
-                        className={`w-5 h-5 ${
-                          favorites.includes(decor.id)
-                            ? 'fill-primary text-primary'
-                            : 'text-muted-foreground'
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  {/* Bottom Info */}
-                  <div>
-                    <Badge variant="secondary" className="mb-2 text-xs">
-                      {decor.category}
-                    </Badge>
-                    <h4 className="font-semibold text-foreground mb-3">{decor.title}</h4>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="flex-1"
-                        onClick={() => window.open(decor.url, '_blank')}
-                      >
-                        <ExternalLink className="w-3 h-3 mr-2" />
-                        View
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          const link = document.createElement('a');
-                          link.href = decor.url;
-                          link.download = `${decor.title}.jpg`;
-                          link.click();
-                          toast.success('Download started');
-                        }}
-                      >
-                        <Download className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between mb-4">
+                  <Badge variant="secondary" className="text-xs">
+                    {decor.category}
+                  </Badge>
+                  <button
+                    onClick={() => toggleFavorite(decor.id)}
+                    className="transition-transform hover:scale-110"
+                  >
+                    <Heart
+                      className={`w-5 h-5 ${
+                        favorites.includes(decor.id)
+                          ? 'fill-primary text-primary'
+                          : 'text-muted-foreground'
+                      }`}
+                    />
+                  </button>
                 </div>
-              </div>
-            </div>
+
+                <h4 className="font-semibold text-lg mb-2">{decor.title}</h4>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                  {decor.description}
+                </p>
+
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => toast.info('Add to Pinterest board or save for reference')}
+                  >
+                    <ExternalLink className="w-3 h-3 mr-2" />
+                    Learn More
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
@@ -203,26 +175,27 @@ export const Decorations = () => {
               <Heart className="w-6 h-6 text-primary fill-primary" />
               Your Favorites ({favorites.length})
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {decorations
                 .filter(d => favorites.includes(d.id))
                 .map(decor => (
-                  <div
+                  <Card
                     key={decor.id}
-                    className="relative aspect-square rounded-lg overflow-hidden shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-medium)] transition-shadow cursor-pointer"
+                    className="card-elegant hover:shadow-[var(--shadow-medium)] transition-shadow"
                   >
-                    <img
-                      src={decor.url}
-                      alt={decor.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      onClick={() => toggleFavorite(decor.id)}
-                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center"
-                    >
-                      <Heart className="w-4 h-4 fill-primary text-primary" />
-                    </button>
-                  </div>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <Badge variant="secondary" className="text-xs">{decor.category}</Badge>
+                        <button
+                          onClick={() => toggleFavorite(decor.id)}
+                        >
+                          <Heart className="w-4 h-4 fill-primary text-primary" />
+                        </button>
+                      </div>
+                      <h4 className="font-medium text-sm mb-1">{decor.title}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{decor.description}</p>
+                    </CardContent>
+                  </Card>
                 ))}
             </div>
           </div>
