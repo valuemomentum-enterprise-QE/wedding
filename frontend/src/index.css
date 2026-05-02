@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@layer base {
+    :root {
+        /* South Indian Wedding Color Palette */
+        --background: 35 20% 97%;  /* Champagne/Cream */
+        --foreground: 350 15% 15%;  /* Dark maroon for text */
+        
+        --card: 0 0% 100%;  /* Pure white for cards */
+        --card-foreground: 350 15% 15%;
+        
+        --popover: 0 0% 100%;
+        --popover-foreground: 350 15% 15%;
+        
+        /* Primary: Maroon/Burgundy - Traditional wedding color */
+        --primary: 350 70% 40%;
+        --primary-foreground: 0 0% 98%;
+        --primary-light: 350 60% 55%;
+        --primary-dark: 350 75% 30%;
+        
+        /* Secondary: Gold/Amber - Luxurious accent */
+        --secondary: 40 85% 55%;
+        --secondary-foreground: 350 15% 15%;
+        --secondary-light: 40 75% 65%;
+        
+        /* Accent: Sage Green - Calming, natural */
+        --accent: 140 30% 60%;
+        --accent-foreground: 350 15% 15%;
+        --accent-light: 140 25% 75%;
+        
+        --muted: 35 15% 92%;
+        --muted-foreground: 350 10% 45%;
+        
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 98%;
+        
+        --border: 350 15% 88%;
+        --input: 350 15% 88%;
+        --ring: 350 70% 40%;
+        
+        /* Success state */
+        --success: 140 50% 45%;
+        --success-foreground: 0 0% 98%;
+        
+        /* Warning state */
+        --warning: 40 95% 50%;
+        --warning-foreground: 350 15% 15%;
+        
+        /* Custom wedding theme colors */
+        --gold: 40 85% 55%;
+        --champagne: 35 20% 90%;
+        --marigold: 38 92% 50%;
+        --jasmine: 60 100% 97%;
+        
+        /* Gradients */
+        --gradient-wedding: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 50%, hsl(var(--secondary)) 100%);
+        --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+        --gradient-accent: linear-gradient(135deg, hsl(var(--accent-light)) 0%, hsl(var(--accent)) 100%);
+        
+        /* Shadows - elegant elevation */
+        --shadow-soft: 0 2px 8px hsl(var(--primary) / 0.08);
+        --shadow-medium: 0 4px 16px hsl(var(--primary) / 0.12);
+        --shadow-strong: 0 8px 32px hsl(var(--primary) / 0.16);
+        --shadow-glow: 0 0 24px hsl(var(--secondary) / 0.2);
+        
+        /* Animations */
+        --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        
+        --radius: 0.75rem;
+    }
+    
+    .dark {
+        --background: 350 15% 8%;
+        --foreground: 35 20% 95%;
+        
+        --card: 350 12% 12%;
+        --card-foreground: 35 20% 95%;
+        
+        --popover: 350 12% 12%;
+        --popover-foreground: 35 20% 95%;
+        
+        --primary: 350 65% 55%;
+        --primary-foreground: 0 0% 98%;
+        --primary-light: 350 60% 65%;
+        --primary-dark: 350 70% 45%;
+        
+        --secondary: 40 80% 60%;
+        --secondary-foreground: 350 15% 15%;
+        --secondary-light: 40 75% 70%;
+        
+        --accent: 140 25% 50%;
+        --accent-foreground: 0 0% 98%;
+        --accent-light: 140 25% 65%;
+        
+        --muted: 350 10% 18%;
+        --muted-foreground: 35 15% 60%;
+        
+        --destructive: 0 75% 55%;
+        --destructive-foreground: 0 0% 98%;
+        
+        --border: 350 10% 22%;
+        --input: 350 10% 22%;
+        --ring: 350 65% 55%;
+        
+        --success: 140 45% 50%;
+        --success-foreground: 0 0% 98%;
+        
+        --warning: 40 90% 55%;
+        --warning-foreground: 350 15% 15%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: 'rlig' 1, 'calt' 1;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+    }
+    
+    /* Smooth transitions for interactive elements */
+    button, a, input, select, textarea {
+        transition: background-color var(--transition-smooth),
+                    color var(--transition-smooth),
+                    border-color var(--transition-smooth),
+                    transform var(--transition-smooth),
+                    box-shadow var(--transition-smooth);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        @apply bg-muted;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary/30 rounded-full;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-primary/50;
+    }
+}
+
+@layer components {
+    /* Card variants */
+    .card-elegant {
+        @apply bg-card border border-border/50 rounded-xl shadow-[var(--shadow-soft)] backdrop-blur-sm;
+    }
+    
+    .card-premium {
+        @apply bg-gradient-to-br from-card via-card to-primary/5 border border-primary/20 rounded-xl shadow-[var(--shadow-medium)];
+    }
+    
+    /* Button glow effect */
+    .btn-glow {
+        box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+    }
+    
+    .btn-glow:hover {
+        box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+    }
+    
+    /* Text gradient */
+    .text-gradient-wedding {
+        background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Glassmorphism effect */
+    .glass {
+        @apply bg-card/80 backdrop-blur-md border border-border/50;
+    }
+    
+    /* Masonry grid for decorations */
+    .masonry-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-auto-rows: 10px;
+        gap: 16px;
+    }
+    
+    /* Animation classes */
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    .animate-slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Status badges */
+    .status-not-started {
+        @apply bg-muted text-muted-foreground;
+    }
+    
+    .status-in-progress {
+        @apply bg-accent/20 text-accent-foreground border border-accent/30;
+    }
+    
+    .status-completed {
+        @apply bg-success/20 text-success-foreground border border-success/30;
+    }
+}
+
+@layer utilities {
+    /* Spacing scale - generous for wedding elegance */
+    .section-spacing {
+        @apply py-16 md:py-24;
+    }
+    
+    .container-padding {
+        @apply px-4 md:px-6 lg:px-8;
+    }
+    
+    /* Typography scale */
+    .heading-hero {
+        @apply text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight;
+    }
+    
+    .heading-section {
+        @apply text-3xl sm:text-4xl lg:text-5xl font-semibold leading-snug;
+    }
+    
+    .heading-card {
+        @apply text-xl sm:text-2xl font-semibold leading-snug;
+    }
+    
+    .body-large {
+        @apply text-lg leading-relaxed;
+    }
+    
+    .body-regular {
+        @apply text-base leading-normal;
+    }
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}
