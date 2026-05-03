@@ -7,7 +7,6 @@ import Tasks from './pages/Tasks';
 import Budget from './pages/Budget';
 import Events from './pages/Events';
 import Vendors from './pages/Vendors';
-import Decorations from './pages/Decorations';
 import Guests from './pages/Guests';
 import Settings from './pages/Settings';
 import './App.css';
@@ -74,7 +73,6 @@ function App() {
             <Route path="/budget" element={<Budget weddingData={weddingData} />} />
             <Route path="/events" element={<Events />} />
             <Route path="/vendors" element={<Vendors />} />
-            <Route path="/decorations" element={<Decorations />} />
             <Route path="/guests" element={<Guests />} />
             <Route path="/settings" element={<Settings weddingData={weddingData} updateWeddingData={updateWeddingData} />} />
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, CheckSquare, DollarSign, Calendar, Users, Image, UserCheck, Settings, Menu, X, Heart } from 'lucide-react';
+import { Home, CheckSquare, DollarSign, Calendar, Users, UserCheck, Settings, Menu, X, Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
@@ -10,7 +10,6 @@ const navItems = [
   { path: '/budget', icon: DollarSign, label: 'Budget' },
   { path: '/events', icon: Calendar, label: 'Events' },
   { path: '/vendors', icon: Users, label: 'Vendors' },
-  { path: '/decorations', icon: Image, label: 'Decor' },
   { path: '/guests', icon: UserCheck, label: 'Guests' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];

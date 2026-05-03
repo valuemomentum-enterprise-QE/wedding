@@ -27,20 +27,15 @@ export const Guests = () => {
   }, []);
 
   const loadGuests = () => {
-    const saved = localStorage.getItem('guests');
-    if (saved) {
-      setGuests(JSON.parse(saved));
-    } else {
-      // Sample guests
-      const sampleGuests = [
-        { id: '1', name: 'Anna Family', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
-        { id: '2', name: 'Uncle', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
-        { id: '3', name: 'JC DIL', email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
-        { id: '4', name: 'Parents', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
-      ];
-      setGuests(sampleGuests);
-      localStorage.setItem('guests', JSON.stringify(sampleGuests));
-    }
+    // Always load complete Excel guests data
+    const sampleGuests = [
+      { id: '1', name: 'Anna Family', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '2', name: 'Uncle', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '3', name: 'JC DIL', email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '4', name: 'Parents', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+    ];
+    setGuests(sampleGuests);
+    localStorage.setItem('guests', JSON.stringify(sampleGuests));
   };
 
   const saveGuests = (updatedGuests) => {
