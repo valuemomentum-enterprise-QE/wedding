@@ -13,83 +13,28 @@ export const Events = () => {
   }, []);
 
   const loadEvents = () => {
-    // Always load complete Excel events data
-    const sampleEvents = [
-      {
-        id: '1',
-        name: 'Airbnb Stay - All Settle',
-        date: '2026-08-13',
-        time: 'All Day',
-        venue: 'Airbnb',
-        description: 'Family and guests arrival',
-        type: 'preparation'
-      },
-      {
-        id: '2',
-        name: 'Engagement and Sangeet',
-        date: '2026-08-14',
-        time: 'Evening',
-        venue: 'Outside',
-        description: 'Ring ceremony and music celebration',
-        type: 'celebration'
-      },
-      {
-        id: '3',
-        name: 'Raata Staphana + Pooja',
-        date: '2026-08-15',
-        time: 'Morning',
-        venue: 'Airbnb',
-        description: 'Traditional pre-wedding ritual',
-        type: 'ceremony'
-      },
-      {
-        id: '4',
-        name: 'Haldi Ceremony',
-        date: '2026-08-15',
-        time: 'Afternoon',
-        venue: 'Airbnb',
-        description: 'Turmeric ceremony for bride and groom',
-        type: 'ceremony'
-      },
-      {
-        id: '5',
-        name: 'Mehendi',
-        date: '2026-08-15',
-        time: 'Evening',
-        venue: 'Airbnb',
-        description: 'Henna application ceremony',
-        type: 'ceremony'
-      },
-      {
-        id: '6',
-        name: 'Wedding Ceremony',
-        date: '2026-08-16',
-        time: 'Early Morning',
-        venue: 'Wedding Hall',
-        description: 'Main wedding ceremony',
-        type: 'wedding'
-      },
-      {
-        id: '7',
-        name: 'Reception',
-        date: '2026-08-16',
-        time: 'Evening',
-        venue: 'Wedding Hall',
-        description: 'Wedding reception and dinner',
-        type: 'celebration'
-      },
-      {
-        id: '8',
-        name: 'Vratam Pooja',
-        date: '2026-08-17',
-        time: 'Morning',
-        venue: 'Temple/Airbnb',
-        description: 'Post-wedding ritual',
-        type: 'ceremony'
-      }
+    const saved = localStorage.getItem('events');
+    if (saved) {
+      setEvents(JSON.parse(saved));
+      return;
+    }
+
+    // Default events sourced from Wedding Planner.pdf events sheet
+    const defaultEvents = [
+      { id: '1', name: 'Airbnb Stay - All Settle', date: '2026-08-13', time: 'All Day', venue: 'Airbnb', description: 'Family and guests arrival and settle in. Catering provided.', type: 'preparation' },
+      { id: '2', name: 'Engagement and Sangeeth', date: '2026-08-14', time: 'Evening', venue: 'Outside', description: 'Ring ceremony and music celebration. Catering provided.', type: 'celebration' },
+      { id: '3', name: 'Raata Staphana + Pooja', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Traditional pre-wedding ritual. Catering provided.', type: 'ceremony' },
+      { id: '4', name: 'Haldi', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Haldi ceremony. Catering provided.', type: 'ceremony' },
+      { id: '5', name: 'Mehendhi', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Henna application ceremony. Catering provided.', type: 'ceremony' },
+      { id: '6', name: 'Haldi - Mangala Snanam (Bride & Groom Prepare)', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Mangala Snanam preparation for bride and groom. Catering provided.', type: 'ceremony' },
+      { id: '7', name: 'Preparations for Wedding', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Final preparations for the wedding day. Catering provided.', type: 'preparation' },
+      { id: '8', name: 'Wedding Venue - Early Morning', date: '2026-08-16', time: 'Early Morning', venue: 'Outside', description: 'Main wedding ceremony at the venue. Catering provided.', type: 'wedding' },
+      { id: '9', name: 'Return to Airbnb stay', date: '2026-08-16', time: 'Morning', venue: 'Airbnb', description: 'Return to Airbnb after the wedding ceremony. Catering provided.', type: 'preparation' },
+      { id: '10', name: 'Vratam Pooja @ Airbnb/temple', date: '2026-08-17', time: 'Morning', venue: 'Outside (Airbnb / Temple)', description: 'Post-wedding Vratam Pooja ritual. Catering provided.', type: 'ceremony' },
+      { id: '11', name: 'Shobhanam', date: '2026-08-17', time: 'Morning', venue: 'Airbnb', description: 'Shobhanam ritual. Catering provided.', type: 'ceremony' }
     ];
-    setEvents(sampleEvents);
-    localStorage.setItem('events', JSON.stringify(sampleEvents));
+    setEvents(defaultEvents);
+    localStorage.setItem('events', JSON.stringify(defaultEvents));
   };
 
   const getEventTypeColor = (type) => {
