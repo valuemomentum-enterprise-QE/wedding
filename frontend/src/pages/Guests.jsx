@@ -27,15 +27,116 @@ export const Guests = () => {
   }, []);
 
   const loadGuests = () => {
-    // Always load complete Excel guests data
-    const sampleGuests = [
-      { id: '1', name: 'Anna Family', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
-      { id: '2', name: 'Uncle', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
-      { id: '3', name: 'JC DIL', email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
-      { id: '4', name: 'Parents', email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+    const saved = localStorage.getItem('guests');
+    if (saved) {
+      setGuests(JSON.parse(saved));
+      return;
+    }
+
+    // Default guest list sourced from Wedding Planner.pdf (JD + JC sides)
+    const defaultGuests = [
+      // JD's side - Primary
+      { id: '1', name: "Amma (JD's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '2', name: "Anna & Family (JD's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '3', name: "Aqheel (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '4', name: "Nousheen (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '5', name: "Deepak (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '6', name: "Akhila (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '7', name: "Siddharth (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '8', name: "Chaturya (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '9', name: "Harsha (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '10', name: "Jaya (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '11', name: "Babai (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '12', name: "Pinni (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '13', name: "Zuber (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '14', name: "Nikitha (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '15', name: "Prasanna Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '16', name: "Sindhu Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '17', name: "Praneet Muktineni (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '18', name: "Anusha Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '19', name: "Manmitha (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '20', name: "Krishna (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '21', name: "Hemant (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '22', name: "Nickel + Prathyusha (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '23', name: "Nishanth (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '24', name: "Ozzie (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '25', name: "Akhil Reddy (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '26', name: "Sai Raj Family (JD's side, Primary)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+
+      // JD's side - Secondary
+      { id: '27', name: "Deepa Akka Family (JD's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'secondary', plusOne: false },
+      { id: '28', name: "Prathyusha Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '29', name: "Avs (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '30', name: "Sravya Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '31', name: "Sai Raj Family (JD's side, Secondary)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '32', name: "Sreekar Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '33', name: "Prashanth Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '34', name: "Sushma Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '35', name: "Mukteshwar Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '36', name: "GITAM friends (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '37', name: "Krishnanjali (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '38', name: "Nandini (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '39', name: "Sumanth Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '40', name: "Bhattu Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '41', name: "Subash Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '42', name: "Prashanth + Aneesha (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '43', name: "Sravan Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '44', name: "Bond Badree (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+
+      // JD's side - Optional
+      { id: '45', name: "Harith Akka Family (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
+      { id: '46', name: "Prashanth Anna (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
+      { id: '47', name: "Extended India Family Members (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
+      { id: '48', name: "Anirudh (JD's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
+
+      // JC's side - Primary
+      { id: '49', name: "Mummy (JC's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '50', name: "Pappa (JC's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '51', name: "Anna (JC's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '52', name: "Keerthu (JC's side)", email: '', phone: '', rsvpStatus: 'yes', guestType: 'primary', plusOne: false },
+      { id: '53', name: "Sahana (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '54', name: "Tharunika (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '55', name: "Harshitha (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '56', name: "Sneha (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '57', name: "Ramya (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '58', name: "Pavan (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '59', name: "Suresh (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '60', name: "Vidya (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '61', name: "Prassana (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '62', name: "Avighna (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '63', name: "Sreeja (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '64', name: "Prathibha (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '65', name: "Gautam (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '66', name: "Ramya UNT (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '67', name: "Vaishu (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '68', name: "Anoohya (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '69', name: "Rupesh & Family (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '70', name: "Pradeep (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+      { id: '71', name: "Bittu, Sumanth (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'primary', plusOne: false },
+
+      // JC's side - Secondary
+      { id: '72', name: "Vishal (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '73', name: "Divya (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '74', name: "Deepthi (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '75', name: "Akhila (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '76', name: "Revanth (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '77', name: "Aishu (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '78', name: "Irfan (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '79', name: "Keerthana R&D (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '80', name: "Office - 7 people family (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '81', name: "Nandhini (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '82', name: "Suchi (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '83', name: "Harshitha Malela (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '84', name: "Swecha (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '85', name: "Manish (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+      { id: '86', name: "Sumanth (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'secondary', plusOne: false },
+
+      // JC's side - Optional
+      { id: '87', name: "Raj Uncle (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
+      { id: '88', name: "Kiran Aunty (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false }
     ];
-    setGuests(sampleGuests);
-    localStorage.setItem('guests', JSON.stringify(sampleGuests));
+    setGuests(defaultGuests);
+    localStorage.setItem('guests', JSON.stringify(defaultGuests));
   };
 
   const saveGuests = (updatedGuests) => {

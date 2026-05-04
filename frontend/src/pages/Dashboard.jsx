@@ -18,6 +18,7 @@ import {
 import { format, differenceInDays } from 'date-fns';
 
 export const Dashboard = ({ weddingData }) => {
+  const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
   const [stats, setStats] = useState({
     totalTasks: 0,
     completedTasks: 0,
@@ -35,9 +36,17 @@ export const Dashboard = ({ weddingData }) => {
     const budgetItems = JSON.parse(localStorage.getItem('budgetItems') || '[]');
     const guests = JSON.parse(localStorage.getItem('guests') || '[]');
 
+    // Convert mixed-currency budget items to USD before summing so the
+    // dashboard total reflects a consistent currency (PDF has both USD and INR).
+    const toUSD = (amount, currency) => {
+      if (!amount) return 0;
+      if (currency === 'INR') return amount / exchangeRate;
+      return amount;
+    };
+
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
-    const totalBudgetAmount = budgetItems.reduce((sum, item) => sum + (item.estimatedCost || 0), 0);
-    const spentAmount = budgetItems.reduce((sum, item) => sum + (item.actualCost || 0), 0);
+    const totalBudgetAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.estimatedCost, item.currency), 0);
+    const spentAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.actualCost, item.currency), 0);
     const rsvpYesCount = guests.filter(g => g.rsvpStatus === 'yes').length;
 
     setStats({
@@ -49,7 +58,7 @@ export const Dashboard = ({ weddingData }) => {
       totalGuests: guests.length,
       rsvpYes: rsvpYesCount
     });
-  }, []);
+  }, [exchangeRate]);
 
   const weddingDate = new Date(weddingData?.couple?.weddingDate || '2026-08-16');
   const daysUntilWedding = differenceInDays(weddingDate, new Date());
@@ -126,8 +135,8 @@ export const Dashboard = ({ weddingData }) => {
                 </div>
                 <Badge variant="secondary" className="text-xs">{budgetPercentage}%</Badge>
               </div>
-              <h3 className="text-2xl font-semibold mb-1">${stats.spent.toLocaleString()}</h3>
-              <p className="text-sm text-muted-foreground">of ${stats.totalBudget.toLocaleString()} budget</p>
+              <h3 className="text-2xl font-semibold mb-1">${Math.round(stats.spent).toLocaleString()}</h3>
+              <p className="text-sm text-muted-foreground">of ${Math.round(stats.totalBudget).toLocaleString()} budget (USD eq.)</p>
               <Progress value={budgetPercentage} className="mt-3 h-2" />
             </CardContent>
           </Card>

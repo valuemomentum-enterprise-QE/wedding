@@ -38,57 +38,65 @@ export const Tasks = () => {
   });
 
   useEffect(() => {
-    // Clear old data and reload fresh Excel data
-    localStorage.clear();
     loadTasks();
   }, []);
 
   const loadTasks = () => {
-    // Always load complete Excel data
-    const sampleTasks = [
-      { id: '1', title: 'Finalize wedding date', category: 'Venue', status: 'completed', assignedTo: 'JD, JC', dueDate: '2026-03-13', priority: 'high', description: 'Finalize and confirm the wedding date. Blocker: Another date discussion' },
-      { id: '2', title: 'Finalize Wedding Venue', category: 'Venue', status: 'in-progress', assignedTo: 'JD, JC', dueDate: '2026-04-12', priority: 'high', description: 'Finding and validating venues. Budget: $5000' },
-      { id: '3', title: 'Wedding E invite - RSVP', category: 'Other', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-05-01', priority: 'high', description: 'Create and send digital wedding invitations with RSVP tracking' },
-      { id: '4', title: 'Priest Booking for Wedding', category: 'Ceremony', status: 'in-progress', assignedTo: 'JD', dueDate: '2026-03-18', priority: 'high', description: 'Book priest for wedding ceremony' },
-      { id: '5', title: 'Marriage License Application', category: 'Other', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-07-01', priority: 'high', description: 'Apply for marriage license' },
-      { id: '6', title: 'Book Photography and Videography', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: '2026-03-25', priority: 'high', description: 'Research and book wedding photographers' },
-      { id: '7', title: 'Book accommodations', category: 'Accommodation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-06-01', priority: 'medium', description: 'Book Airbnb for guests' },
-      { id: '8', title: 'Event Decoration', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: '2026-05-10', priority: 'medium', description: 'Plan decoration themes for each event' },
-      { id: '9', title: "Jay's Anna Family Visa's and Uncle Visa", category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: '2026-04-01', priority: 'high', description: 'Dubai halt, Uncle slot on April 1st' },
-      { id: '10', title: "JC's DIL Visa", category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: '2026-04-15', priority: 'high', description: 'Visa application for DIL' },
-      { id: '11', title: 'Sangeeth/Engagement', category: 'Other', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-06-01', priority: 'medium', description: 'Plan Sangeet and Engagement ceremony' },
-      { id: '12', title: 'Rental Car', category: 'Transportation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-07-15', priority: 'medium', description: 'Book rental car for wedding period' },
-      { id: '13', title: 'Wedding Costume Trial Check', category: 'Attire', status: 'not-started', assignedTo: 'JC', dueDate: '2026-05-15', priority: 'medium', description: 'Trial check for wedding costumes' },
-      { id: '14', title: 'Dress Fit Check', category: 'Attire', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-01', priority: 'medium', description: 'Until JC Mom is in USA' },
-      { id: '15', title: 'Indian visitor flights/Insurance for parents', category: 'Transportation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-05-01', priority: 'high', description: 'Book flights and insurance for parents from India' },
-      { id: '16', title: 'Credit cards - balance transfer / points', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: '2026-03-01', priority: 'low', description: 'Optimize credit card benefits for wedding expenses' },
-      { id: '17', title: 'Travel Cards', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: '2026-03-15', priority: 'low', description: 'Get travel credit cards' },
-      { id: '18', title: 'Apply Travel Credit Card - Amex', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: '2026-03-01', priority: 'low', description: 'Apply for Amex travel card' },
-      { id: '19', title: 'Return gift (from India)', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-15', priority: 'medium', description: 'Order return gifts from India' },
-      { id: '20', title: 'Wedding Sign board', category: 'Decoration', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-07-01', priority: 'low', description: 'Design and order wedding signage' },
-      { id: '21', title: 'Henna/haldi activities book', category: 'Ceremony', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-01', priority: 'medium', description: 'Book henna and haldi activity vendors' },
-      { id: '22', title: 'Make-up packages book', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-01', priority: 'medium', description: 'Book makeup artist packages' },
-      { id: '23', title: 'Airbnb Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-07-01', priority: 'high', description: 'Arrange catering for Airbnb events' },
-      { id: '24', title: 'Cutlery/Plates/Cups', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: '2026-07-15', priority: 'low', description: 'Order disposable cutlery and plates' },
-      { id: '25', title: 'Audio/DJ', category: 'Audio/DJ', status: 'not-started', assignedTo: 'JD', dueDate: '2026-06-01', priority: 'high', description: 'Book DJ and sound system' },
-      { id: '26', title: 'Mehendi Artist', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-15', priority: 'medium', description: 'Book mehendi artist' },
-      { id: '27', title: 'Hair', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: '2026-07-15', priority: 'medium', description: 'Book hair stylist' },
-      { id: '28', title: 'MakeUp', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: '2026-07-15', priority: 'medium', description: 'Book makeup artist' },
-      { id: '29', title: 'Saree Draping', category: 'Attire', status: 'not-started', assignedTo: 'JC', dueDate: '2026-07-15', priority: 'medium', description: 'Book saree draping service' },
-      { id: '30', title: 'Event Design Templates', category: 'Decoration', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-05-01', priority: 'low', description: 'Design templates for events' },
-      { id: '31', title: 'Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-05-01', priority: 'high', description: 'Finalize main catering vendor. Dependency: 7,14,9' },
-      { id: '32', title: 'Venue Decision', category: 'Venue', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-04-12', priority: 'high', description: 'Make final venue decision. Dependency: 7,14,9' },
-      { id: '33', title: 'Airbnb Stay', category: 'Accommodation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-07-01', priority: 'high', description: 'Book Airbnb for wedding period' },
-      { id: '34', title: 'Photographer/Video', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: '2026-05-01', priority: 'high', description: 'Finalize photographer and videographer' },
-      { id: '35', title: 'Haldi Deco', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: '2026-07-01', priority: 'medium', description: 'Plan Haldi ceremony decorations' },
-      { id: '36', title: 'Car Rental', category: 'Transportation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-07-15', priority: 'medium', description: 'Rent cars for wedding party' },
-      { id: '37', title: 'Deco', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: '2026-06-01', priority: 'medium', description: 'General decoration planning' },
-      { id: '38', title: 'Open Savings Account', category: 'Other', status: 'not-started', assignedTo: 'JD, JC', dueDate: '2026-02-01', priority: 'low', description: 'Open joint savings account for wedding' },
-      { id: '39', title: 'India Flight Dates confirm to Anna', category: 'Transportation', status: 'not-started', assignedTo: 'JD', dueDate: '2026-05-01', priority: 'high', description: 'Confirm India flight dates with Anna' },
-      { id: '40', title: 'JD Pooja & Priest', category: 'Ceremony', status: 'not-started', assignedTo: 'JD', dueDate: '2026-07-01', priority: 'high', description: 'Book priest for JD pooja' }
+    const saved = localStorage.getItem('tasks');
+    if (saved) {
+      setTasks(JSON.parse(saved));
+      return;
+    }
+
+    // Default tasks sourced from Wedding Planner.pdf (To-do + dependency sheets)
+    const defaultTasks = [
+      // Page 1 - main "To do" sheet
+      { id: '1', title: 'Finalize wedding date', category: 'Other', status: 'completed', assignedTo: 'JD and JC', dueDate: '2026-03-13', priority: 'high', description: 'August 16th 2026. Blocker: Another date discussion.' },
+      { id: '2', title: 'Finalize Wedding Venue', category: 'Venue', status: 'in-progress', assignedTo: 'JD and JC', dueDate: '2026-04-12', priority: 'high', description: 'Finding venues, visit in person, budget validation, 2 venues to be decided. Estimate: $5000.' },
+      { id: '3', title: 'Wedding E invite - RSVP', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '4', title: 'Priest Booking for Wedding', category: 'Ceremony', status: 'completed', assignedTo: 'JD and JC', dueDate: '2026-03-18', priority: 'high', description: 'Booked for Aug 16th - Sharad pandit. Estimate: $1000.' },
+      { id: '5', title: 'Indian visitor flights/Insurance for parents', category: 'Transportation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '6', title: 'Credit cards - balance transfer / points / Travel Cards', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'low', description: 'Blocker: Apply Travel Credit Card - Amex.' },
+      { id: '7', title: 'Wedding Sign board', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'low', description: '' },
+      { id: '8', title: 'Marriage License Application', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: '' },
+      { id: '9', title: 'Book Photography and Videography', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '10', title: 'Book accommodations', category: 'Accommodation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '11', title: 'Event Decoration', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '12', title: 'Return gift (from India)', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '13', title: 'Henna/haldi activities book', category: 'Ceremony', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '14', title: 'Make-up packages book', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '15', title: 'Airbnb Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '16', title: 'Cutlery/Plates/Cups', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'low', description: '' },
+      { id: '17', title: 'Audio/DJ', category: 'Audio/DJ', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '18', title: "Jay's Anna Family Visa's and Uncle Visa", category: 'Other', status: 'in-progress', assignedTo: 'JD', dueDate: '2026-04-01', priority: 'high', description: 'Dubai halt, Uncle slot on April 1st.' },
+      { id: '19', title: "JC's DIL Visa", category: 'Other', status: 'completed', assignedTo: 'JC', dueDate: null, priority: 'high', description: '' },
+      { id: '20', title: 'Sangeeth/ Engagement', category: 'Ceremony', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '21', title: 'Rental Car', category: 'Transportation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '22', title: 'Airbnb', category: 'Accommodation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: 'Based on Venue.' },
+      { id: '23', title: 'Wedding Costume Trial Check', category: 'Attire', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '24', title: 'JD Pooja & Priest', category: 'Ceremony', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: 'Blocker: Until JC Mom is in USA.' },
+      { id: '25', title: 'Dress Fit Check', category: 'Attire', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
+
+      // Page 2 - dependency / vendor task sheet
+      { id: '26', title: 'Mehendi Artist', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '27', title: 'Hair', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '28', title: 'MakeUp', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '29', title: 'Saree Draping', category: 'Attire', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '30', title: 'Event Design Templates', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'low', description: '' },
+      { id: '31', title: 'Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '32', title: 'Venue Decision', category: 'Venue', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: 'Dependency: 7, 14, 9.' },
+      { id: '33', title: 'Airbnb Stay', category: 'Accommodation', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '34', title: 'Photographer/Video', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
+      { id: '35', title: 'Haldi Deco', category: 'Decoration', status: 'not-started', assignedTo: '', dueDate: null, priority: 'medium', description: '' },
+      { id: '36', title: 'Car Rental', category: 'Transportation', status: 'not-started', assignedTo: '', dueDate: null, priority: 'medium', description: '' },
+      { id: '37', title: 'Deco', category: 'Decoration', status: 'not-started', assignedTo: 'JC/JD', dueDate: null, priority: 'medium', description: '' },
+
+      // Page 9 - additional tasks
+      { id: '38', title: 'Open Savings Account', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
+      { id: '39', title: 'India Flight Dates confirm to Anna', category: 'Transportation', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' }
     ];
-    setTasks(sampleTasks);
-    localStorage.setItem('tasks', JSON.stringify(sampleTasks));
+    setTasks(defaultTasks);
+    localStorage.setItem('tasks', JSON.stringify(defaultTasks));
   };
 
   const saveTasks = (updatedTasks) => {

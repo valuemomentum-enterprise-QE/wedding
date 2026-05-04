@@ -37,36 +37,44 @@ export const Budget = ({ weddingData }) => {
   }, []);
 
   const loadBudget = () => {
-    // Always load complete Excel budget data
-    const sampleItems = [
-      // USA Expenses
-      { id: '1', category: 'Venue', description: 'Wedding hall + dining room + 2 changing rooms + tables + chairs for 8 hours', estimatedCost: 4500, actualCost: 4500, currency: 'USD', paidBy: 'Split', notes: 'Paid' },
-      { id: '2', category: 'Catering', description: 'Dubai + India = US Land avtaru - Airbnb', estimatedCost: 3500, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: '' },
-      { id: '3', category: 'Other', description: 'House Cleaning Stuff - Walmart', estimatedCost: 200, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: '' },
-      { id: '4', category: 'Ceremony', description: 'JD Pooja & Priest', estimatedCost: 500, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: '' },
-      { id: '5', category: 'Ceremony', description: 'JD Pooja & Priest Venue', estimatedCost: 300, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: '' },
-      { id: '6', category: 'Ceremony', description: 'Priest fee: wedding 1300, vratham 700', estimatedCost: 2000, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: 'Wedding + Vratham ceremony' },
-      { id: '7', category: 'Decoration', description: 'Decorations for all events', estimatedCost: 3000, actualCost: 0, currency: 'USD', paidBy: 'Split', notes: '' },
-      { id: '8', category: 'Other', description: 'Bride Makeup, Hair, Draping, Artist travel expense', estimatedCost: 1500, actualCost: 0, currency: 'USD', paidBy: 'JC', notes: '' },
-      { id: '9', category: 'Photography', description: 'Wedding photography package', estimatedCost: 2500, actualCost: 0, currency: 'USD', paidBy: 'JC', notes: '' },
-      { id: '10', category: 'Videography', description: 'Wedding videography', estimatedCost: 2000, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: '' },
-      
-      // India Expenses
-      { id: '11', category: 'Ceremony', description: 'Pooja Samagri', estimatedCost: 10000, actualCost: 0, currency: 'INR', paidBy: 'Parents', notes: 'Pooja materials from India' },
-      { id: '12', category: 'Ceremony', description: 'Pelli Samagri', estimatedCost: 15000, actualCost: 0, currency: 'INR', paidBy: 'Parents', notes: 'Wedding ceremony materials' },
-      { id: '13', category: 'Attire', description: 'Groom Dress', estimatedCost: 30000, actualCost: 0, currency: 'INR', paidBy: 'Parents', notes: 'Traditional groom attire' },
-      { id: '14', category: 'Attire', description: 'Bride Dress', estimatedCost: 50000, actualCost: 0, currency: 'INR', paidBy: 'Parents', notes: 'Traditional bride attire' },
-      { id: '15', category: 'Other', description: 'Return Gift', estimatedCost: 25000, actualCost: 0, currency: 'INR', paidBy: 'JD Splitwise', notes: 'Return gifts for guests' },
-      { id: '16', category: 'Transportation', description: 'Flight Tickets - JD/JC', estimatedCost: 80000, actualCost: 0, currency: 'INR', paidBy: 'JD', notes: 'Flight tickets to/from India' },
-      { id: '17', category: 'Other', description: 'Sweets', estimatedCost: 15000, actualCost: 0, currency: 'INR', paidBy: 'Parents chuskuntaru', notes: 'Traditional sweets' },
-      
-      // Additional expenses mentioned
-      { id: '18', category: 'Accommodation', description: 'Airbnb Stay', estimatedCost: 3000, actualCost: 0, currency: 'USD', paidBy: 'Split', notes: 'Accommodation for wedding period' },
-      { id: '19', category: 'Audio/DJ', description: 'Audio/DJ services', estimatedCost: 1500, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: 'DJ and sound system' },
-      { id: '20', category: 'Transportation', description: 'Car Rental', estimatedCost: 800, actualCost: 0, currency: 'USD', paidBy: 'JD', notes: 'Vehicle rental for wedding' }
+    const saved = localStorage.getItem('budgetItems');
+    if (saved) {
+      setBudgetItems(JSON.parse(saved));
+      return;
+    }
+
+    // Default budget sourced from Wedding Planner.pdf (USA, India, and debt sheets)
+    const defaultItems = [
+      // USA Expenses (USD)
+      { id: '1', category: 'Accommodation', description: 'Dubai + India = US Land avtaru - Airbnb', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '2', category: 'Catering', description: 'Catering', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '3', category: 'Other', description: 'House Cleaning Stuff - Walmart', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '4', category: 'Attire', description: 'Groom Dress', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '5', category: 'Ceremony', description: 'JD Pooja & Priest', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '6', category: 'Ceremony', description: 'JD Pooja & Priest Venue', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '7', category: 'Ceremony', description: 'Pelli/Pooja Samagri Misc', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '8', category: 'Venue', description: 'Wedding hall + dining room + 2 changing rooms + tables + chairs for 8 hours', estimatedCost: 2500, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '9', category: 'Ceremony', description: 'Priest fee', estimatedCost: 4500, actualCost: 0, currency: 'USD', paidBy: '', notes: 'PDF lists $4,500 in the amount column. Breakdown shown in PDF: wedding $1,300 + vratham $700 (additional fees not itemized).' },
+      { id: '10', category: 'Decoration', description: 'Decorations', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '11', category: 'Other', description: 'Bride Makeup, Hair, Drapping, Artist travel expense', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '12', category: 'Photography', description: 'Photographer', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '13', category: 'Videography', description: 'VideoGrapher', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+
+      // India Expenses (INR)
+      { id: '14', category: 'Ceremony', description: 'Pooja Samagri', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '15', category: 'Ceremony', description: 'Pelli Samagri', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '16', category: 'Attire', description: 'Groom Dress', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '17', category: 'Attire', description: 'Bride Dress', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '18', category: 'Return Gifts', description: 'Return Gift', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '19', category: 'Transportation', description: 'Flight Tickets - JD/JC', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+      { id: '20', category: 'Sweets', description: 'Sweets', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
+
+      // Debt Expenses to Collect (USD)
+      { id: '21', category: 'Other', description: 'JD Splitwise', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'JD Splitwise', notes: 'Debt to collect' },
+      { id: '22', category: 'Other', description: 'Parents chuskuntaru', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'Parents chuskuntaru', notes: 'Debt to collect' }
     ];
-    setBudgetItems(sampleItems);
-    localStorage.setItem('budgetItems', JSON.stringify(sampleItems));
+    setBudgetItems(defaultItems);
+    localStorage.setItem('budgetItems', JSON.stringify(defaultItems));
   };
 
   const saveBudget = (items) => {
@@ -306,7 +314,10 @@ export const Budget = ({ weddingData }) => {
                 {currency === 'USD' ? '$' : '₹'}{allTotals.remaining.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </h3>
               <p className="text-xs text-success-foreground">
-                {((allTotals.remaining / allTotals.totalEstimated) * 100).toFixed(1)}% available
+                {(allTotals.totalEstimated > 0
+                  ? (allTotals.remaining / allTotals.totalEstimated) * 100
+                  : 0
+                ).toFixed(1)}% available
               </p>
             </CardContent>
           </Card>
