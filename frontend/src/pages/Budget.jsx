@@ -54,7 +54,7 @@ export const Budget = ({ weddingData }) => {
       { id: '6', category: 'Ceremony', description: 'JD Pooja & Priest Venue', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
       { id: '7', category: 'Ceremony', description: 'Pelli/Pooja Samagri Misc', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
       { id: '8', category: 'Venue', description: 'Wedding hall + dining room + 2 changing rooms + tables + chairs for 8 hours', estimatedCost: 2500, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '9', category: 'Ceremony', description: 'Priest fee (wedding 1300 + vratham 700)', estimatedCost: 4500, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
+      { id: '9', category: 'Ceremony', description: 'Priest fee', estimatedCost: 4500, actualCost: 0, currency: 'USD', paidBy: '', notes: 'PDF lists $4,500 in the amount column. Breakdown shown in PDF: wedding $1,300 + vratham $700 (additional fees not itemized).' },
       { id: '10', category: 'Decoration', description: 'Decorations', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
       { id: '11', category: 'Other', description: 'Bride Makeup, Hair, Drapping, Artist travel expense', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
       { id: '12', category: 'Photography', description: 'Photographer', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
@@ -314,7 +314,10 @@ export const Budget = ({ weddingData }) => {
                 {currency === 'USD' ? '$' : '₹'}{allTotals.remaining.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </h3>
               <p className="text-xs text-success-foreground">
-                {((allTotals.remaining / allTotals.totalEstimated) * 100).toFixed(1)}% available
+                {(allTotals.totalEstimated > 0
+                  ? (allTotals.remaining / allTotals.totalEstimated) * 100
+                  : 0
+                ).toFixed(1)}% available
               </p>
             </CardContent>
           </Card>
