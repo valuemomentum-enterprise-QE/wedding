@@ -6,6 +6,7 @@ import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Search, Heart, ExternalLink, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '../lib/supabase';
 
 const DECOR_CATEGORIES = [
   'All', 'Mandap', 'Floral', 'Marigold', 'Jasmine', 'Stage', 'Entrance'
@@ -19,10 +20,11 @@ export const Decorations = () => {
 
   useEffect(() => {
     loadDecorations();
-    const saved = localStorage.getItem('favoriteDecor');
-    if (saved) {
-      setFavorites(JSON.parse(saved));
-    }
+    const loadFavorites = async () => {
+      const { data } = await supabase.from('favorite_decor').select('decor_id');
+      if (data) setFavorites(data.map((d) => d.decor_id));
+    };
+    loadFavorites();
   }, []);
 
   const loadDecorations = () => {
@@ -50,14 +52,19 @@ export const Decorations = () => {
     setDecorations(decorIdeas);
   };
 
-  const toggleFavorite = (id) => {
-    const newFavorites = favorites.includes(id)
+  const toggleFavorite = async (id) => {
+    const isFavorite = favorites.includes(id);
+    const newFavorites = isFavorite
       ? favorites.filter(fav => fav !== id)
       : [...favorites, id];
-    
+
     setFavorites(newFavorites);
-    localStorage.setItem('favoriteDecor', JSON.stringify(newFavorites));
-    toast.success(favorites.includes(id) ? 'Removed from favorites' : 'Added to favorites');
+    if (isFavorite) {
+      await supabase.from('favorite_decor').delete().eq('decor_id', id);
+    } else {
+      await supabase.from('favorite_decor').insert({ decor_id: id });
+    }
+    toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites');
   };
 
   const filteredDecorations = decorations.filter(decor => {

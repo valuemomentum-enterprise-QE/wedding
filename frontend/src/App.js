@@ -9,6 +9,7 @@ import Events from './pages/Events';
 import Vendors from './pages/Vendors';
 import Guests from './pages/Guests';
 import Settings from './pages/Settings';
+import { supabase } from './lib/supabase';
 import './App.css';
 
 function App() {
@@ -16,31 +17,58 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize wedding data from localStorage or create default
-    const initializeData = () => {
-      const savedData = localStorage.getItem('weddingPlannerData');
-      
-      if (savedData) {
-        setWeddingData(JSON.parse(savedData));
+    const initializeData = async () => {
+      const { data } = await supabase
+        .from('wedding_settings')
+        .select('*')
+        .eq('id', 'default')
+        .maybeSingle();
+
+      if (data) {
+        setWeddingData({
+          couple: {
+            bride: data.bride,
+            groom: data.groom,
+            weddingDate: data.wedding_date,
+            location: data.location,
+          },
+          settings: {
+            primaryCurrency: data.primary_currency,
+            secondaryCurrency: data.secondary_currency,
+            exchangeRate: Number(data.exchange_rate),
+            emails: data.emails || [],
+            theme: data.theme || 'light',
+          },
+        });
       } else {
-        // Default wedding data structure
         const defaultData = {
           couple: {
             bride: 'JC',
             groom: 'JD',
             weddingDate: '2026-08-16',
-            location: 'USA'
+            location: 'USA',
           },
           settings: {
             primaryCurrency: 'USD',
             secondaryCurrency: 'INR',
             exchangeRate: 83.5,
             emails: [],
-            theme: 'light'
-          }
+            theme: 'light',
+          },
         };
+        await supabase.from('wedding_settings').insert({
+          id: 'default',
+          bride: 'JC',
+          groom: 'JD',
+          wedding_date: '2026-08-16',
+          location: 'USA',
+          primary_currency: 'USD',
+          secondary_currency: 'INR',
+          exchange_rate: 83.5,
+          emails: [],
+          theme: 'light',
+        });
         setWeddingData(defaultData);
-        localStorage.setItem('weddingPlannerData', JSON.stringify(defaultData));
       }
       setLoading(false);
     };
@@ -48,10 +76,22 @@ function App() {
     initializeData();
   }, []);
 
-  const updateWeddingData = (updates) => {
+  const updateWeddingData = async (updates) => {
     const newData = { ...weddingData, ...updates };
     setWeddingData(newData);
-    localStorage.setItem('weddingPlannerData', JSON.stringify(newData));
+    await supabase.from('wedding_settings').upsert({
+      id: 'default',
+      bride: newData.couple.bride,
+      groom: newData.couple.groom,
+      wedding_date: newData.couple.weddingDate,
+      location: newData.couple.location,
+      primary_currency: newData.settings.primaryCurrency,
+      secondary_currency: newData.settings.secondaryCurrency,
+      exchange_rate: newData.settings.exchangeRate,
+      emails: newData.settings.emails,
+      theme: newData.settings.theme,
+      updated_at: new Date().toISOString(),
+    });
   };
 
   if (loading) {

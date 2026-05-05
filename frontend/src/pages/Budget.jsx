@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Progress } from '../components/ui/progress';
 import { Plus, DollarSign, TrendingUp, TrendingDown, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '../lib/supabase';
+import { toCamelCaseArray, toSnakeCase } from '../lib/supabaseHelpers';
 
 const BUDGET_CATEGORIES = [
   'Venue', 'Catering', 'Photography', 'Videography', 'Decoration', 'Audio/DJ',
@@ -36,10 +38,10 @@ export const Budget = ({ weddingData }) => {
     loadBudget();
   }, []);
 
-  const loadBudget = () => {
-    const saved = localStorage.getItem('budgetItems');
-    if (saved) {
-      setBudgetItems(JSON.parse(saved));
+  const loadBudget = async () => {
+    const { data } = await supabase.from('budget_items').select('*');
+    if (data && data.length > 0) {
+      setBudgetItems(toCamelCaseArray(data));
       return;
     }
 
@@ -73,16 +75,12 @@ export const Budget = ({ weddingData }) => {
       { id: '21', category: 'Other', description: 'JD Splitwise', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'JD Splitwise', notes: 'Debt to collect' },
       { id: '22', category: 'Other', description: 'Parents chuskuntaru', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'Parents chuskuntaru', notes: 'Debt to collect' }
     ];
+    const snakeItems = defaultItems.map((i) => toSnakeCase(i));
+    await supabase.from('budget_items').insert(snakeItems);
     setBudgetItems(defaultItems);
-    localStorage.setItem('budgetItems', JSON.stringify(defaultItems));
   };
 
-  const saveBudget = (items) => {
-    setBudgetItems(items);
-    localStorage.setItem('budgetItems', JSON.stringify(items));
-  };
-
-  const addItem = () => {
+  const addItem = async () => {
     if (!newItem.category || !newItem.description || !newItem.estimatedCost) {
       toast.error('Please fill in required fields');
       return;
@@ -95,7 +93,8 @@ export const Budget = ({ weddingData }) => {
       actualCost: newItem.actualCost ? parseFloat(newItem.actualCost) : 0
     };
 
-    saveBudget([...budgetItems, item]);
+    await supabase.from('budget_items').insert(toSnakeCase(item));
+    setBudgetItems([...budgetItems, item]);
     setNewItem({
       category: '',
       description: '',
@@ -109,8 +108,9 @@ export const Budget = ({ weddingData }) => {
     toast.success('Budget item added!');
   };
 
-  const deleteItem = (id) => {
-    saveBudget(budgetItems.filter(item => item.id !== id));
+  const deleteItem = async (id) => {
+    await supabase.from('budget_items').delete().eq('id', id);
+    setBudgetItems(budgetItems.filter(item => item.id !== id));
     toast.success('Item deleted!');
   };
 

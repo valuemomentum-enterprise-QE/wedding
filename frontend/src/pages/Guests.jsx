@@ -8,6 +8,8 @@ import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Plus, UserCheck, UserX, Clock, Mail, Phone, Trash2, Link as LinkIcon, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '../lib/supabase';
+import { toCamelCaseArray, toSnakeCase } from '../lib/supabaseHelpers';
 
 export const Guests = () => {
   const [guests, setGuests] = useState([]);
@@ -26,10 +28,10 @@ export const Guests = () => {
     loadGuests();
   }, []);
 
-  const loadGuests = () => {
-    const saved = localStorage.getItem('guests');
-    if (saved) {
-      setGuests(JSON.parse(saved));
+  const loadGuests = async () => {
+    const { data } = await supabase.from('guests').select('*');
+    if (data && data.length > 0) {
+      setGuests(toCamelCaseArray(data));
       return;
     }
 
@@ -135,16 +137,12 @@ export const Guests = () => {
       { id: '87', name: "Raj Uncle (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false },
       { id: '88', name: "Kiran Aunty (JC's side)", email: '', phone: '', rsvpStatus: 'pending', guestType: 'optional', plusOne: false }
     ];
+    const snakeGuests = defaultGuests.map((g) => toSnakeCase(g));
+    await supabase.from('guests').insert(snakeGuests);
     setGuests(defaultGuests);
-    localStorage.setItem('guests', JSON.stringify(defaultGuests));
   };
 
-  const saveGuests = (updatedGuests) => {
-    setGuests(updatedGuests);
-    localStorage.setItem('guests', JSON.stringify(updatedGuests));
-  };
-
-  const addGuest = () => {
+  const addGuest = async () => {
     if (!newGuest.name) {
       toast.error('Please enter guest name');
       return;
@@ -155,7 +153,8 @@ export const Guests = () => {
       id: Date.now().toString()
     };
 
-    saveGuests([...guests, guest]);
+    await supabase.from('guests').insert(toSnakeCase(guest));
+    setGuests([...guests, guest]);
     setNewGuest({
       name: '',
       email: '',
@@ -168,16 +167,17 @@ export const Guests = () => {
     toast.success('Guest added successfully!');
   };
 
-  const updateRSVP = (guestId, status) => {
-    const updated = guests.map(guest =>
+  const updateRSVP = async (guestId, status) => {
+    await supabase.from('guests').update({ rsvp_status: status }).eq('id', guestId);
+    setGuests(guests.map(guest =>
       guest.id === guestId ? { ...guest, rsvpStatus: status } : guest
-    );
-    saveGuests(updated);
+    ));
     toast.success('RSVP status updated!');
   };
 
-  const deleteGuest = (guestId) => {
-    saveGuests(guests.filter(g => g.id !== guestId));
+  const deleteGuest = async (guestId) => {
+    await supabase.from('guests').delete().eq('id', guestId);
+    setGuests(guests.filter(g => g.id !== guestId));
     toast.success('Guest removed!');
   };
 

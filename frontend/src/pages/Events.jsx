@@ -4,6 +4,8 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Calendar, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { format } from 'date-fns';
+import { supabase } from '../lib/supabase';
+import { toCamelCaseArray, toSnakeCase } from '../lib/supabaseHelpers';
 
 export const Events = () => {
   const [events, setEvents] = useState([]);
@@ -12,10 +14,10 @@ export const Events = () => {
     loadEvents();
   }, []);
 
-  const loadEvents = () => {
-    const saved = localStorage.getItem('events');
-    if (saved) {
-      setEvents(JSON.parse(saved));
+  const loadEvents = async () => {
+    const { data } = await supabase.from('events').select('*');
+    if (data && data.length > 0) {
+      setEvents(toCamelCaseArray(data));
       return;
     }
 
@@ -33,8 +35,9 @@ export const Events = () => {
       { id: '10', name: 'Vratam Pooja @ Airbnb/temple', date: '2026-08-17', time: 'Morning', venue: 'Outside (Airbnb / Temple)', description: 'Post-wedding Vratam Pooja ritual. Catering provided.', type: 'ceremony' },
       { id: '11', name: 'Shobhanam', date: '2026-08-17', time: 'Morning', venue: 'Airbnb', description: 'Shobhanam ritual. Catering provided.', type: 'ceremony' }
     ];
+    const snakeEvents = defaultEvents.map((e) => toSnakeCase(e));
+    await supabase.from('events').insert(snakeEvents);
     setEvents(defaultEvents);
-    localStorage.setItem('events', JSON.stringify(defaultEvents));
   };
 
   const getEventTypeColor = (type) => {

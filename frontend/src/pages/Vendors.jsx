@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Phone, Mail, MapPin, DollarSign, CheckCircle2, XCircle, Clock, Users } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { toCamelCaseArray, toSnakeCase } from '../lib/supabaseHelpers';
 
 const VENDOR_CATEGORIES = [
   'Venue', 'Catering', 'Photography', 'Videography', 'Decoration', 'Audio/DJ',
@@ -17,10 +19,10 @@ export const Vendors = () => {
     loadVendors();
   }, []);
 
-  const loadVendors = () => {
-    const saved = localStorage.getItem('vendors');
-    if (saved) {
-      setVendors(JSON.parse(saved));
+  const loadVendors = async () => {
+    const { data } = await supabase.from('vendors').select('*');
+    if (data && data.length > 0) {
+      setVendors(toCamelCaseArray(data));
       return;
     }
 
@@ -70,8 +72,9 @@ export const Vendors = () => {
       { id: '39', name: 'Event Decoration (TBD)', category: 'Decoration', status: 'not-contacted', phone: '', email: '', cost: '', notes: 'Assigned to JC/JD. General event decoration.', rating: 0 },
       { id: '40', name: 'Car Rental (TBD)', category: 'Transportation', status: 'not-contacted', phone: '', email: '', cost: '', notes: 'Rental car for the wedding period.', rating: 0 }
     ];
+    const snakeVendors = defaultVendors.map((v) => toSnakeCase(v));
+    await supabase.from('vendors').insert(snakeVendors);
     setVendors(defaultVendors);
-    localStorage.setItem('vendors', JSON.stringify(defaultVendors));
   };
 
   const getStatusIcon = (status) => {

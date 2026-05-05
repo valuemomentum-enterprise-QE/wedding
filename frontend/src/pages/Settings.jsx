@@ -240,9 +240,8 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
             <CardContent className="pt-6">
               <h4 className="font-medium text-sm mb-2">About This App</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Your wedding planner data is stored locally on your device using browser storage. 
-                To access from multiple devices, share the app link and manually sync your data. 
-                Remember to export your data regularly as backup.
+                Your wedding planner data is securely stored in the cloud using Supabase,
+                so it stays in sync across every device you use to open the app.
               </p>
             </CardContent>
           </Card>

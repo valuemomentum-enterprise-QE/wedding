@@ -16,6 +16,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
+import { supabase } from '../lib/supabase';
+import { toCamelCaseArray } from '../lib/supabaseHelpers';
 
 export const Dashboard = ({ weddingData }) => {
   const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
@@ -30,34 +32,43 @@ export const Dashboard = ({ weddingData }) => {
   });
 
   useEffect(() => {
-    // Load stats from localStorage
-    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-    const events = JSON.parse(localStorage.getItem('events') || '[]');
-    const budgetItems = JSON.parse(localStorage.getItem('budgetItems') || '[]');
-    const guests = JSON.parse(localStorage.getItem('guests') || '[]');
+    const loadStats = async () => {
+      const [tasksRes, eventsRes, budgetRes, guestsRes] = await Promise.all([
+        supabase.from('tasks').select('*'),
+        supabase.from('events').select('*'),
+        supabase.from('budget_items').select('*'),
+        supabase.from('guests').select('*'),
+      ]);
+      const tasks = toCamelCaseArray(tasksRes.data || []);
+      const events = toCamelCaseArray(eventsRes.data || []);
+      const budgetItems = toCamelCaseArray(budgetRes.data || []);
+      const guests = toCamelCaseArray(guestsRes.data || []);
 
-    // Convert mixed-currency budget items to USD before summing so the
-    // dashboard total reflects a consistent currency (PDF has both USD and INR).
-    const toUSD = (amount, currency) => {
-      if (!amount) return 0;
-      if (currency === 'INR') return amount / exchangeRate;
-      return amount;
+      // Convert mixed-currency budget items to USD before summing so the
+      // dashboard total reflects a consistent currency (PDF has both USD and INR).
+      const toUSD = (amount, currency) => {
+        if (!amount) return 0;
+        if (currency === 'INR') return amount / exchangeRate;
+        return Number(amount);
+      };
+
+      const completedTasks = tasks.filter(t => t.status === 'completed').length;
+      const totalBudgetAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.estimatedCost, item.currency), 0);
+      const spentAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.actualCost, item.currency), 0);
+      const rsvpYesCount = guests.filter(g => g.rsvpStatus === 'yes').length;
+
+      setStats({
+        totalTasks: tasks.length,
+        completedTasks,
+        upcomingEvents: events.length,
+        totalBudget: totalBudgetAmount,
+        spent: spentAmount,
+        totalGuests: guests.length,
+        rsvpYes: rsvpYesCount
+      });
     };
 
-    const completedTasks = tasks.filter(t => t.status === 'completed').length;
-    const totalBudgetAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.estimatedCost, item.currency), 0);
-    const spentAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.actualCost, item.currency), 0);
-    const rsvpYesCount = guests.filter(g => g.rsvpStatus === 'yes').length;
-
-    setStats({
-      totalTasks: tasks.length,
-      completedTasks,
-      upcomingEvents: events.length,
-      totalBudget: totalBudgetAmount,
-      spent: spentAmount,
-      totalGuests: guests.length,
-      rsvpYes: rsvpYesCount
-    });
+    loadStats();
   }, [exchangeRate]);
 
   const weddingDate = new Date(weddingData?.couple?.weddingDate || '2026-08-16');
