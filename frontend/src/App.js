@@ -49,7 +49,11 @@ function App() {
   }, []);
 
   const updateWeddingData = (updates) => {
-    const newData = { ...weddingData, ...updates };
+    const newData = {
+      ...weddingData,
+      couple: { ...weddingData?.couple, ...updates.couple },
+      settings: { ...weddingData?.settings, ...updates.settings }
+    };
     setWeddingData(newData);
     localStorage.setItem('weddingPlannerData', JSON.stringify(newData));
   };
