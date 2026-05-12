@@ -12,15 +12,30 @@ import { toast } from 'sonner';
 
 export const Settings = ({ weddingData, updateWeddingData }) => {
   const [settings, setSettings] = useState({
-    bride: weddingData?.couple?.bride || 'JC',
-    groom: weddingData?.couple?.groom || 'JD',
-    weddingDate: new Date(weddingData?.couple?.weddingDate || '2026-08-16'),
-    location: weddingData?.couple?.location || 'USA',
-    primaryCurrency: weddingData?.settings?.primaryCurrency || 'USD',
-    secondaryCurrency: weddingData?.settings?.secondaryCurrency || 'INR',
-    exchangeRate: weddingData?.settings?.exchangeRate || 83.5,
-    emails: weddingData?.settings?.emails?.join(', ') || '',
+    bride: '',
+    groom: '',
+    weddingDate: new Date(),
+    location: '',
+    primaryCurrency: 'USD',
+    secondaryCurrency: 'INR',
+    exchangeRate: 83.5,
+    emails: '',
   });
+
+  useEffect(() => {
+    if (weddingData) {
+      setSettings({
+        bride: weddingData.couple?.bride || 'JC',
+        groom: weddingData.couple?.groom || 'JD',
+        weddingDate: new Date(weddingData.couple?.weddingDate || '2026-08-16'),
+        location: weddingData.couple?.location || 'USA',
+        primaryCurrency: weddingData.settings?.primaryCurrency || 'USD',
+        secondaryCurrency: weddingData.settings?.secondaryCurrency || 'INR',
+        exchangeRate: weddingData.settings?.exchangeRate || 83.5,
+        emails: weddingData.settings?.emails?.join(', ') || '',
+      });
+    }
+  }, [weddingData]);
 
   const handleSave = () => {
     const emailList = settings.emails
@@ -39,7 +54,8 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
         primaryCurrency: settings.primaryCurrency,
         secondaryCurrency: settings.secondaryCurrency,
         exchangeRate: parseFloat(settings.exchangeRate),
-        emails: emailList
+        emails: emailList,
+        theme: weddingData?.settings?.theme || 'light'
       }
     };
 
