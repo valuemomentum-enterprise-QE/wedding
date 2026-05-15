@@ -15,6 +15,19 @@ class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         handle_options(self)
 
+    def do_GET(self):
+        """Browser / health checks use GET; only POST is supported (avoids 501 from BaseHTTPRequestHandler)."""
+        if handle_options(self):
+            return
+        send_json(
+            self,
+            405,
+            {
+                "error": "Method not allowed",
+                "hint": 'Send POST with JSON body: {"passcode": "..."}',
+            },
+        )
+
     def do_POST(self):
         if handle_options(self):
             return

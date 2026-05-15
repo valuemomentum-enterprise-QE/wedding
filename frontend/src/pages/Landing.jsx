@@ -11,7 +11,20 @@ import { useWeddingSiteData } from '../hooks/useWeddingSiteData';
 import { parseWeddingDate } from '../lib/weddingUtils';
 import { format } from 'date-fns';
 
-const SECTION_1_BG = `${process.env.PUBLIC_URL}/landing/section-1-bg.png`;
+const HERO_BG = 'rgb(254, 250, 238)';
+const FLOWER_2 = `${process.env.PUBLIC_URL}/landing/flower2.png`;
+
+const nameDisplayStyle = {
+  fontSize: '1em',
+  fontWeight: 400,
+  fontStyle: 'normal',
+  color: 'rgb(51, 61, 35)',
+  fontKerning: 'none',
+  textDecorationLine: 'none',
+  textDecorationThickness: 'initial',
+  textDecorationStyle: 'initial',
+};
+
 const SECTION_3_BG = `${process.env.PUBLIC_URL}/landing/section-3-bg.png`;
 
 const PHOTOS = {
@@ -37,63 +50,25 @@ export const Landing = () => {
     <div className="landing-page min-h-screen text-foreground font-body overflow-x-hidden max-w-[100vw]">
       <LandingSideNav groom={couple.groom} bride={couple.bride} />
 
-      {/* Section 1 — floral frame + invitation text */}
-      <section className="relative overflow-hidden bg-cream">
-        <LandingFrameBackground imageUrl={SECTION_1_BG} />
-        <div className={`${frameContentClass} pl-11 pr-4 sm:pl-6 sm:pr-6 py-8 sm:py-12`}>
-          <div className="w-full max-w-lg mx-auto animate-fade-in text-center min-w-0">
-            <p className="text-[0.65rem] xs:text-[0.7rem] sm:text-xs tracking-[0.18em] sm:tracking-[0.22em] uppercase text-primary mb-4 sm:mb-5 leading-relaxed">
-              You&apos;re cordially invited to the wedding of
-            </p>
-
-            <h1 className="font-display text-xl xs:text-2xl sm:text-3xl md:text-4xl text-sage leading-snug mb-1 break-words px-1">
-              {couple.groomFullName}
-            </h1>
-            {couple.groomParents && (
-              <p className="text-[0.7rem] xs:text-xs sm:text-sm text-foreground/80 mb-3 sm:mb-4 leading-snug px-1">
-                {couple.groomParents}
-              </p>
-            )}
-
-            <p className="font-display text-lg sm:text-xl text-primary my-2">&amp;</p>
-
-            <h1 className="font-display text-xl xs:text-2xl sm:text-3xl md:text-4xl text-sage leading-snug mb-1 break-words px-1">
-              {couple.brideFullName}
-            </h1>
-            {couple.brideParents && (
-              <p className="text-[0.7rem] xs:text-xs sm:text-sm text-foreground/80 mb-6 sm:mb-8 leading-snug px-1">
-                {couple.brideParents}
-              </p>
-            )}
-
-            <div className="flex flex-col items-center gap-3 mb-6 sm:mb-8 sm:flex-row sm:justify-center sm:gap-5">
-              <p className="text-sm font-medium text-sage tracking-widest order-1 sm:order-none">
-                {format(weddingDate, 'MMM').toUpperCase()}
-              </p>
-              <div className="text-center order-2 sm:order-none">
-                <p className="text-[0.6rem] xs:text-[0.65rem] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase text-primary border-y border-sage/40 py-1 px-2 sm:px-3">
-                  {format(weddingDate, 'EEEE').toUpperCase()}
-                </p>
-                <p className="font-display text-4xl xs:text-5xl sm:text-6xl text-primary leading-none my-1">
-                  {format(weddingDate, 'd')}
-                </p>
-                <p className="text-[0.6rem] xs:text-[0.65rem] sm:text-xs tracking-[0.12em] sm:tracking-[0.15em] uppercase text-primary border-y border-sage/40 py-1 px-2 sm:px-3">
-                  AT {venue.time?.toUpperCase() || '11:40 AM'}
-                </p>
+      {/* Section 1 — cream hero, botanical left, names right */}
+      <section className="relative overflow-hidden" style={{ background: HERO_BG }}>
+        <div
+          className={`relative z-10 flex w-full max-w-full items-stretch ${landingFrameMinHeightClass()}`}
+        >
+          <div className="flex w-full flex-col md:flex-row md:items-center">
+            <div className="flex w-full shrink-0 items-center justify-center px-6 pb-6 pt-10 md:w-[42%] md:justify-start md:px-6 md:pb-0 md:pl-10 md:pr-4 md:pt-0 lg:w-[40%] lg:pl-14">
+              <img
+                src={FLOWER_2}
+                alt=""
+                className="h-auto w-[78%] max-w-[min(400px,88vw)] object-contain object-center md:h-[min(78vh,720px)] md:max-h-none md:w-auto md:max-w-[92%] md:object-left"
+              />
+            </div>
+            <div className="flex flex-1 flex-col items-center justify-center px-6 pb-14 pt-2 text-center md:items-center md:px-10 md:pb-12 md:pt-0">
+              <div className="animate-fade-in flex flex-col gap-3 sm:gap-4">
+                <p style={nameDisplayStyle}>{couple.groom}</p>
+                <p style={nameDisplayStyle}>{couple.bride}</p>
               </div>
-              <p className="text-sm font-medium text-sage tracking-widest order-3 sm:order-none">
-                {format(weddingDate, 'yyyy')}
-              </p>
             </div>
-
-            <div className="mb-8 sm:mb-10 px-1">
-              <p className="text-xs tracking-[0.2em] uppercase text-sage mb-1">At</p>
-              <p className="text-xs sm:text-sm md:text-base text-primary leading-relaxed break-words">
-                {venue.address}
-              </p>
-            </div>
-
-            <LandingButton onClick={scrollToRsvp}>RSVP Here</LandingButton>
           </div>
         </div>
       </section>
