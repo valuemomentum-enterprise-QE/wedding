@@ -4,17 +4,19 @@ import { format } from 'date-fns';
 
 const DEFAULT_SITE = {
   couple: {
-    bride: 'JC',
-    groom: 'JD',
-    brideFullName: 'JC',
-    groomFullName: 'JD',
+    bride: 'Jahnavi',
+    groom: 'Jayadeep',
+    brideFullName: 'Jahnavi Chintakindi',
+    groomFullName: 'Jayadeep Ram Guttikonda',
+    groomParents: 'S/o Venugopal Rao Guttikonda & Satyavalli Misala',
+    brideParents: 'D/o Sanjay and Jyothi Chintakindi',
     weddingDate: '2026-08-16',
-    location: 'USA',
+    location: 'Boyds, MD',
   },
   venue: {
-    time: '3:00 PM onwards',
-    name: 'Ceremony Venue',
-    address: 'Details coming soon',
+    time: '11:40 AM',
+    name: 'Wedding Ceremony',
+    address: '14700 Bubbling Spring Road, Boyds, MD, 20841',
     accessible: true,
   },
   story: {
@@ -46,8 +48,10 @@ export function useWeddingSiteData() {
         couple: {
           ...DEFAULT_SITE.couple,
           ...data.couple,
-          brideFullName: data.couple?.brideFullName || data.couple?.bride || 'JC',
-          groomFullName: data.couple?.groomFullName || data.couple?.groom || 'JD',
+          brideFullName: data.couple?.brideFullName || data.couple?.bride || DEFAULT_SITE.couple.brideFullName,
+          groomFullName: data.couple?.groomFullName || data.couple?.groom || DEFAULT_SITE.couple.groomFullName,
+          groomParents: data.couple?.groomParents || DEFAULT_SITE.couple.groomParents,
+          brideParents: data.couple?.brideParents || DEFAULT_SITE.couple.brideParents,
         },
         venue: {
           ...DEFAULT_SITE.venue,

@@ -27,12 +27,12 @@ function App() {
       } else {
         const defaultData = {
           couple: {
-            bride: 'JC',
-            groom: 'JD',
-            brideFullName: 'JC',
-            groomFullName: 'JD',
+            bride: 'Jahnavi',
+            groom: 'Jayadeep',
+            brideFullName: 'Jahnavi Chintakindi',
+            groomFullName: 'Jayadeep Ram Guttikonda',
             weddingDate: '2026-08-16',
-            location: 'USA',
+            location: 'New Jersey,USA',
           },
           venue: {
             time: '3:00 PM onwards',
