@@ -101,3 +101,90 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+## user_problem_statement: Create functional and non-functional tests for Wedding Planner app, run and fix failures, then prepare for UI redesign.
+
+## backend:
+  - task: "API status endpoints"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+        - agent: "main"
+        - comment: "Frontend is localStorage-first; backend not covered in this test pass."
+
+## frontend:
+  - task: "Wedding date parsing and display consistency"
+    implemented: true
+    working: true
+    file: "frontend/src/lib/weddingUtils.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+        - agent: "user"
+        - comment: "Sidebar showed Aug 16 while hero showed Aug 15 due to UTC date parsing."
+        - working: true
+        - agent: "main"
+        - comment: "parseISO + shared formatters; Navigation reads weddingData."
+
+  - task: "Dashboard stats from localStorage"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "main"
+        - comment: "calculateDashboardStats + 17 unit tests."
+
+  - task: "/decorations route"
+    implemented: true
+    working: true
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: false
+        - agent: "main"
+        - comment: "Decorations page existed but was not routed."
+        - working: true
+        - agent: "main"
+        - comment: "Route added in App.js."
+
+  - task: "Automated test suite (functional + non-functional)"
+    implemented: true
+    working: true
+    file: "frontend/src/**/*.test.{js,jsx}"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+        - agent: "main"
+        - comment: "39 tests: 35 passed, 4 todo (manual NFR). npm run test:ci green."
+
+## metadata:
+  created_by: "main_agent"
+  version: "1.1"
+  test_sequence: 1
+  run_ui: false
+
+## test_plan:
+  current_focus:
+    - "UI redesign with Claude aesthetics frontend template"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+## agent_communication:
+    - agent: "main"
+    - message: "Added Jest/RTL suite, fixed date TZ bug, decorations route, Navigation dynamic date. All automated tests pass. Ready for redesign phase."

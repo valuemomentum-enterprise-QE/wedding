@@ -15,9 +15,16 @@ import {
   Heart,
   Sparkles
 } from 'lucide-react';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
+import {
+  parseWeddingDate,
+  getDaysUntilWedding,
+  formatWeddingDateLong,
+  calculateDashboardStats,
+  loadLocalStorageJson,
+} from '../lib/weddingUtils';
 
-export const Dashboard = ({ weddingData }) => {
+export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
   const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
   const [stats, setStats] = useState({
     totalTasks: 0,
@@ -30,40 +37,38 @@ export const Dashboard = ({ weddingData }) => {
   });
 
   useEffect(() => {
-    // Load stats from localStorage
-    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-    const events = JSON.parse(localStorage.getItem('events') || '[]');
-    const budgetItems = JSON.parse(localStorage.getItem('budgetItems') || '[]');
-    const guests = JSON.parse(localStorage.getItem('guests') || '[]');
+    const tasks = loadLocalStorageJson('tasks');
+    const events = loadLocalStorageJson('events');
+    const budgetItems = loadLocalStorageJson('budgetItems');
+    const guests = loadLocalStorageJson('guests');
 
-    // Convert mixed-currency budget items to USD before summing so the
-    // dashboard total reflects a consistent currency (PDF has both USD and INR).
-    const toUSD = (amount, currency) => {
-      if (!amount) return 0;
-      if (currency === 'INR') return amount / exchangeRate;
-      return amount;
-    };
-
-    const completedTasks = tasks.filter(t => t.status === 'completed').length;
-    const totalBudgetAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.estimatedCost, item.currency), 0);
-    const spentAmount = budgetItems.reduce((sum, item) => sum + toUSD(item.actualCost, item.currency), 0);
-    const rsvpYesCount = guests.filter(g => g.rsvpStatus === 'yes').length;
+    const computed = calculateDashboardStats({
+      tasks,
+      events,
+      budgetItems,
+      guests,
+      exchangeRate,
+    });
 
     setStats({
-      totalTasks: tasks.length,
-      completedTasks,
-      upcomingEvents: events.length,
-      totalBudget: totalBudgetAmount,
-      spent: spentAmount,
-      totalGuests: guests.length,
-      rsvpYes: rsvpYesCount
+      totalTasks: computed.totalTasks,
+      completedTasks: computed.completedTasks,
+      upcomingEvents: computed.upcomingEvents,
+      totalBudget: computed.totalBudget,
+      spent: computed.spent,
+      totalGuests: computed.totalGuests,
+      rsvpYes: computed.rsvpYes,
     });
   }, [exchangeRate]);
 
-  const weddingDate = new Date(weddingData?.couple?.weddingDate || '2026-08-16');
-  const daysUntilWedding = differenceInDays(weddingDate, new Date());
-  const progressPercentage = stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0;
-  const budgetPercentage = stats.totalBudget > 0 ? Math.round((stats.spent / stats.totalBudget) * 100) : 0;
+  const weddingDate = parseWeddingDate(weddingData?.couple?.weddingDate);
+  const daysUntilWedding = getDaysUntilWedding(weddingDate);
+  const progressPercentage = stats.totalTasks > 0
+    ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
+    : 0;
+  const budgetPercentage = stats.totalBudget > 0
+    ? Math.round((stats.spent / stats.totalBudget) * 100)
+    : 0;
 
   // Priority tasks for after-work view
   const priorityTasks = [
@@ -75,7 +80,7 @@ export const Dashboard = ({ weddingData }) => {
   return (
     <div className="min-h-screen pt-14 md:pt-0">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
+      <div className="relative overflow-hidden bg-gradient-to-br from-peach/40 via-cream to-secondary/30 border-b border-border/50">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1654156577076-e0350ba86cc1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHxTb3V0aCUyMEluZGlhbiUyMHdlZGRpbmd8ZW58MHx8fHwxNzc3NzY0ODIxfDA&ixlib=rb-4.1.0&q=85')] bg-cover bg-center opacity-5" />
         <div className="relative container-custom py-12 md:py-16">
           <div className="max-w-3xl">
@@ -85,20 +90,20 @@ export const Dashboard = ({ weddingData }) => {
                 Your Dream Wedding
               </Badge>
             </div>
-            <h1 className="heading-hero text-gradient-wedding mb-4">
+            <h1 className="heading-hero font-display tracking-wide text-foreground mb-4">
               {daysUntilWedding} Days Until Your Big Day
             </h1>
             <p className="body-large text-muted-foreground mb-6">
-              {format(weddingDate, 'EEEE, MMMM do, yyyy')} • South Indian Wedding in USA
+              {formatWeddingDateLong(weddingDate)} • South Indian Wedding in USA
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/tasks">
+              <Link to={`${plannerPrefix}/tasks`}>
                 <Button className="btn-glow">
                   <CheckCircle2 className="w-4 h-4 mr-2" />
                   View Tasks
                 </Button>
               </Link>
-              <Link to="/decorations">
+              <Link to={`${plannerPrefix}/decorations`}>
                 <Button variant="outline">
                   <Sparkles className="w-4 h-4 mr-2" />
                   Browse Decor Ideas
@@ -163,7 +168,7 @@ export const Dashboard = ({ weddingData }) => {
               </div>
               <h3 className="text-2xl font-semibold mb-1">{stats.upcomingEvents}</h3>
               <p className="text-sm text-muted-foreground">Events Planned</p>
-              <Link to="/events">
+              <Link to={`${plannerPrefix}/events`}>
                 <Button variant="link" className="mt-2 p-0 h-auto text-xs">
                   View Timeline <ArrowRight className="w-3 h-3 ml-1" />
                 </Button>
@@ -199,7 +204,7 @@ export const Dashboard = ({ weddingData }) => {
                       <p className="font-medium text-sm mb-1">{task.title}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Badge variant="secondary" className="text-xs">{task.category}</Badge>
-                        <span>Due: {format(new Date(task.dueDate), 'MMM dd')}</span>
+                        <span>Due: {format(parseWeddingDate(task.dueDate), 'MMM dd')}</span>
                       </div>
                     </div>
                     <Badge
@@ -216,7 +221,7 @@ export const Dashboard = ({ weddingData }) => {
                   <p className="text-sm">All caught up! No priority tasks.</p>
                 </div>
               )}
-              <Link to="/tasks">
+              <Link to={`${plannerPrefix}/tasks`}>
                 <Button variant="ghost" className="w-full mt-2">
                   View All Tasks <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -260,7 +265,7 @@ export const Dashboard = ({ weddingData }) => {
                 </p>
               </div>
 
-              <Link to="/events">
+              <Link to={`${plannerPrefix}/events`}>
                 <Button variant="outline" className="w-full mt-2">
                   View Event Timeline <Calendar className="w-4 h-4 ml-2" />
                 </Button>
@@ -271,7 +276,7 @@ export const Dashboard = ({ weddingData }) => {
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Link to="/guests">
+          <Link to={`${plannerPrefix}/guests`}>
             <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
               <CardContent className="pt-6 text-center">
                 <Users className="w-8 h-8 mx-auto mb-3 text-primary" />
@@ -280,7 +285,7 @@ export const Dashboard = ({ weddingData }) => {
             </Card>
           </Link>
 
-          <Link to="/decorations">
+          <Link to={`${plannerPrefix}/decorations`}>
             <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
               <CardContent className="pt-6 text-center">
                 <Sparkles className="w-8 h-8 mx-auto mb-3 text-secondary" />
@@ -289,7 +294,7 @@ export const Dashboard = ({ weddingData }) => {
             </Card>
           </Link>
 
-          <Link to="/vendors">
+          <Link to={`${plannerPrefix}/vendors`}>
             <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
               <CardContent className="pt-6 text-center">
                 <Users className="w-8 h-8 mx-auto mb-3 text-accent" />
@@ -298,7 +303,7 @@ export const Dashboard = ({ weddingData }) => {
             </Card>
           </Link>
 
-          <Link to="/budget">
+          <Link to={`${plannerPrefix}/budget`}>
             <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
               <CardContent className="pt-6 text-center">
                 <DollarSign className="w-8 h-8 mx-auto mb-3 text-primary" />
