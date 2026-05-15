@@ -1,9 +1,12 @@
 import React from 'react';
-import { ChevronDown, Leaf } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { FloralDecoration } from '../components/landing/FloralDecoration';
 import { LandingButton } from '../components/landing/LandingButton';
 import { LandingSideNav } from '../components/landing/LandingSideNav';
 import { useWeddingSiteData } from '../hooks/useWeddingSiteData';
+
+const SECTION_1_BG = `${process.env.PUBLIC_URL}/landing/section-1-bg.png`;
+const SECTION_3_BG = `${process.env.PUBLIC_URL}/landing/section-3-bg.png`;
 
 const PHOTOS = {
   romance1:
@@ -18,21 +21,19 @@ export const Landing = () => {
   const { couple, venue, story, rsvp } = useWeddingSiteData();
   const groomName = (couple.groomFullName || couple.groom || 'Groom').toUpperCase();
   const brideName = (couple.brideFullName || couple.bride || 'Bride').toUpperCase();
-  const initials = `${couple.groom || 'G'} & ${couple.bride || 'B'}`;
-
   const scrollToRsvp = () => {
     document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <div className="landing-page min-h-screen bg-cream text-foreground font-body">
+    <div className="landing-page min-h-screen text-foreground font-body">
       <LandingSideNav groom={couple.groom} bride={couple.bride} />
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden bg-cream">
-        <FloralDecoration position="top-left" className="top-0 left-0" />
-        <FloralDecoration position="top-right" className="top-0 right-0" />
-        <FloralDecoration position="bottom-left" className="bottom-8 left-0 opacity-80" />
-        <FloralDecoration position="bottom-right" className="bottom-8 right-0 opacity-80" />
 
+      {/* Section 1 — floral frame background from design asset */}
+      <section
+        className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden bg-cream bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('${SECTION_1_BG}')` }}
+      >
         <div className="relative z-10 text-center max-w-2xl mx-auto animate-fade-in">
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.12em] leading-tight">
             <span className="block">{groomName}</span>
@@ -45,15 +46,13 @@ export const Landing = () => {
         </div>
       </section>
 
-      <section className="relative bg-peach py-16 md:py-24 px-4 sm:px-8">
+      {/* Section 2 — peach romance (clean background; sprig on photo only) */}
+      <section className="landing-section-peach relative py-16 md:py-24 px-4 sm:px-8">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 md:gap-14 items-center">
           <div className="flex gap-3 sm:gap-4 justify-center md:justify-end order-2 md:order-1">
             <div className="relative w-[42%] sm:w-[38%] max-w-[200px]">
               <img src={PHOTOS.romance1} alt="Couple portrait" className="w-full aspect-[3/4] object-cover rounded-sm shadow-md" />
-              <div className="absolute -bottom-3 -left-2 flex items-center gap-1.5 bg-cream/90 px-2 py-1 rounded-sm">
-                <Leaf className="w-3.5 h-3.5 text-sage" strokeWidth={1.5} />
-                <span className="font-display text-sm tracking-widest">{initials}</span>
-              </div>
+              <FloralDecoration size="sm" className="-bottom-4 -left-8 z-10" />
             </div>
             <img src={PHOTOS.romance2} alt="Couple celebration" className="w-[42%] sm:w-[38%] max-w-[200px] aspect-[3/4] object-cover rounded-sm shadow-md mt-8" />
           </div>
@@ -65,7 +64,8 @@ export const Landing = () => {
         </div>
       </section>
 
-      <section className="relative bg-cream py-16 md:py-24 px-4 sm:px-8 overflow-hidden">
+      {/* Section 3 — cream ceremony */}
+      <section className="landing-section-cream relative py-16 md:py-24 px-4 sm:px-8 overflow-hidden">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div className="text-center md:text-left px-2 order-2 md:order-1">
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl tracking-[0.12em] mb-8 md:mb-10 leading-snug">
@@ -83,15 +83,18 @@ export const Landing = () => {
             </ul>
           </div>
           <div className="relative order-1 md:order-2 flex justify-center">
-            <img src={PHOTOS.ceremony} alt="Wedding ceremony" className="w-full max-w-sm md:max-w-md aspect-[3/4] object-cover rounded-sm shadow-lg" />
-            <FloralDecoration position="bottom-right" className="bottom-0 right-0 sm:-right-4 translate-x-4 translate-y-4 w-32 sm:w-40" />
+            <img src={PHOTOS.ceremony} alt="Wedding ceremony" className="w-full max-w-sm md:max-w-md aspect-[3/4] object-cover rounded-sm shadow-lg relative z-0" />
+            <FloralDecoration size="md" className="bottom-0 right-0 sm:-right-6 translate-x-2 translate-y-2 z-10" />
           </div>
         </div>
       </section>
 
-      <section id="rsvp" className="relative bg-peach py-20 md:py-28 px-6 text-center overflow-hidden">
-        <FloralDecoration position="bottom-left" className="bottom-0 left-0 opacity-70" />
-        <FloralDecoration position="bottom-right" className="bottom-0 right-0 opacity-70" />
+      {/* Section 4 — RSVP footer with floral frame background */}
+      <section
+        id="rsvp"
+        className="relative py-20 md:py-28 px-6 text-center overflow-hidden bg-peach bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('${SECTION_3_BG}')` }}
+      >
         <div className="relative z-10 max-w-xl mx-auto">
           <h2 className="font-display text-xl sm:text-2xl md:text-3xl tracking-[0.18em] mb-6">
             THEY&apos;RE EXCITED<br />TO SEE YOU THERE!
