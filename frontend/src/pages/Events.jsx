@@ -1,42 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
+import React from 'react';
+import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Calendar, MapPin, Clock, Users, Plus } from 'lucide-react';
+import { Calendar, MapPin, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { parseWeddingDate } from '../lib/weddingUtils';
+import { PLANNER_STORAGE_KEYS } from '../lib/plannerStorage';
+import { usePlannerStorage } from '../hooks/usePlannerStorage';
 
 export const Events = () => {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
-  const loadEvents = () => {
-    const saved = localStorage.getItem('events');
-    if (saved) {
-      setEvents(JSON.parse(saved));
-      return;
-    }
-
-    // Default events sourced from Wedding Planner.pdf events sheet
-    const defaultEvents = [
-      { id: '1', name: 'Airbnb Family Stay', date: '2026-08-13', time: 'All Day', venue: 'Airbnb', description: 'Family and guests arrival and settle in. Catering provided.', type: 'preparation' },
-      { id: '2', name: 'Engagement and Sangeeth', date: '2026-08-14', time: 'Evening', venue: 'Outside', description: 'Ring ceremony and music celebration. Catering provided.', type: 'celebration' },
-      { id: '3', name: 'Raata Staphana + Pooja', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Traditional pre-wedding ritual. Catering provided.', type: 'ceremony' },
-      { id: '4', name: 'Haldi', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Haldi ceremony. Catering provided.', type: 'ceremony' },
-      { id: '5', name: 'Mehendhi', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Henna application ceremony. Catering provided.', type: 'ceremony' },
-      { id: '6', name: 'Haldi - Mangala Snanam (Bride & Groom Prepare)', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Mangala Snanam preparation for bride and groom. Catering provided.', type: 'ceremony' },
-      { id: '7', name: 'Preparations for Wedding', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Final preparations for the wedding day. Catering provided.', type: 'preparation' },
-      { id: '8', name: 'Wedding Venue - Early Morning', date: '2026-08-16', time: 'Early Morning', venue: 'Outside', description: 'Main wedding ceremony at the venue. Catering provided.', type: 'wedding' },
-      { id: '9', name: 'Return to Airbnb stay', date: '2026-08-16', time: 'Morning', venue: 'Airbnb', description: 'Return to Airbnb after the wedding ceremony. Catering provided.', type: 'preparation' },
-      { id: '10', name: 'Vratam Pooja @ Airbnb/temple', date: '2026-08-17', time: 'Morning', venue: 'Outside (Airbnb / Temple)', description: 'Post-wedding Vratam Pooja ritual. Catering provided.', type: 'ceremony' },
-      { id: '11', name: 'Shobhanam', date: '2026-08-17', time: 'Morning', venue: 'Airbnb', description: 'Shobhanam ritual. Catering provided.', type: 'ceremony' }
-    ];
-    setEvents(defaultEvents);
-    localStorage.setItem('events', JSON.stringify(defaultEvents));
-  };
+  const [events, , , { loading, syncError }] = usePlannerStorage(
+    PLANNER_STORAGE_KEYS.events
+  );
 
   const getEventTypeColor = (type) => {
     switch (type) {
@@ -54,6 +28,12 @@ export const Events = () => {
         <div className="container-custom py-8 md:py-12">
           <h1 className="heading-section mb-2">Event Timeline</h1>
           <p className="text-muted-foreground">Your wedding celebration schedule</p>
+          {loading && (
+            <p className="text-xs text-muted-foreground mt-2">Loading events from server…</p>
+          )}
+          {syncError && (
+            <p className="text-xs text-destructive mt-2" role="alert">{syncError}</p>
+          )}
         </div>
       </div>
 

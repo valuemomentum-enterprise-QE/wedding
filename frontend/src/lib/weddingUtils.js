@@ -25,9 +25,29 @@ export function calculateTaskProgress(completed, total) {
 }
 
 export function toUSD(amount, currency, exchangeRate = 83.5) {
-  if (!amount) return 0;
-  if (currency === 'INR') return amount / exchangeRate;
-  return amount;
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return 0;
+  if (currency === 'INR') return value / exchangeRate;
+  return value;
+}
+
+/** Same totals as Dashboard — keeps Budget page and home stats aligned. */
+export function summarizeBudget(budgetItems = [], exchangeRate = 83.5) {
+  const totalBudget = budgetItems.reduce(
+    (sum, item) => sum + toUSD(item.estimatedCost, item.currency, exchangeRate),
+    0
+  );
+  const spent = budgetItems.reduce(
+    (sum, item) => sum + toUSD(item.actualCost, item.currency, exchangeRate),
+    0
+  );
+  return {
+    totalBudget,
+    spent,
+    remaining: totalBudget - spent,
+    budgetPercentage:
+      totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0,
+  };
 }
 
 export function calculateDashboardStats({
@@ -38,13 +58,9 @@ export function calculateDashboardStats({
   exchangeRate = 83.5,
 }) {
   const completedTasks = tasks.filter((t) => t.status === 'completed').length;
-  const totalBudget = budgetItems.reduce(
-    (sum, item) => sum + toUSD(item.estimatedCost, item.currency, exchangeRate),
-    0
-  );
-  const spent = budgetItems.reduce(
-    (sum, item) => sum + toUSD(item.actualCost, item.currency, exchangeRate),
-    0
+  const { totalBudget, spent, budgetPercentage } = summarizeBudget(
+    budgetItems,
+    exchangeRate
   );
   const rsvpYes = guests.filter((g) => g.rsvpStatus === 'yes').length;
 
@@ -57,8 +73,7 @@ export function calculateDashboardStats({
     totalGuests: guests.length,
     rsvpYes,
     progressPercentage: calculateTaskProgress(completedTasks, tasks.length),
-    budgetPercentage:
-      totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0,
+    budgetPercentage,
     guestProgress:
       guests.length > 0 ? (rsvpYes / guests.length) * 100 : 0,
   };

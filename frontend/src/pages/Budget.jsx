@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
 import { Plus, DollarSign, TrendingUp, TrendingDown, Edit, Trash2 } from 'lucide-react';
+import { summarizeBudget } from '../lib/weddingUtils';
+import { PLANNER_STORAGE_KEYS } from '../lib/plannerStorage';
+import { usePlannerStorage } from '../hooks/usePlannerStorage';
 import { toast } from 'sonner';
 
 const BUDGET_CATEGORIES = [
@@ -17,7 +20,9 @@ const BUDGET_CATEGORIES = [
 ];
 
 export const Budget = ({ weddingData }) => {
-  const [budgetItems, setBudgetItems] = useState([]);
+  const [budgetItems, saveBudget, , { loading, syncError }] = usePlannerStorage(
+    PLANNER_STORAGE_KEYS.budgetItems
+  );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currency, setCurrency] = useState('USD');
   const [newItem, setNewItem] = useState({
@@ -31,31 +36,6 @@ export const Budget = ({ weddingData }) => {
   });
 
   const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
-
-  useEffect(() => {
-    loadBudget();
-  }, []);
-
-  const loadBudget = () => {
-    const saved = localStorage.getItem('budgetItems');
-    if (saved) {
-      try {
-        setBudgetItems(JSON.parse(saved));
-      } catch {
-        setBudgetItems([]);
-        localStorage.setItem('budgetItems', JSON.stringify([]));
-      }
-      return;
-    }
-
-    setBudgetItems([]);
-    localStorage.setItem('budgetItems', JSON.stringify([]));
-  };
-
-  const saveBudget = (items) => {
-    setBudgetItems(items);
-    localStorage.setItem('budgetItems', JSON.stringify(items));
-  };
 
   const addItem = () => {
     if (!newItem.category || !newItem.description || !newItem.estimatedCost) {
@@ -120,7 +100,7 @@ export const Budget = ({ weddingData }) => {
   };
 
   const allTotals = getTotals();
-  const usdTotals = getTotals('USD');
+  const usdTotals = summarizeBudget(budgetItems, exchangeRate);
   const inrTotals = getTotals('INR');
   const spentPercentage = allTotals.totalEstimated > 0
     ? (allTotals.totalActual / allTotals.totalEstimated) * 100
@@ -141,6 +121,12 @@ export const Budget = ({ weddingData }) => {
             <div>
               <h1 className="heading-section mb-2">Budget Tracker</h1>
               <p className="text-muted-foreground">Track expenses in both USD and INR</p>
+              {loading && (
+                <p className="text-xs text-muted-foreground mt-2">Loading budget from server…</p>
+              )}
+              {syncError && (
+                <p className="text-xs text-destructive mt-2" role="alert">{syncError}</p>
+              )}
             </div>
             <div className="flex gap-3">
               <Select value={currency} onValueChange={setCurrency}>
@@ -255,7 +241,7 @@ export const Budget = ({ weddingData }) => {
               <div className="text-xs space-y-1">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">USD:</span>
-                  <span className="font-medium">${usdTotals.totalEstimated.toLocaleString()}</span>
+                  <span className="font-medium">${Math.round(usdTotals.totalBudget).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">INR:</span>

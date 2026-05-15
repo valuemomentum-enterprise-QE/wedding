@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -13,6 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popove
 import { Plus, Calendar as CalendarIcon, User, Trash2, Check, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { parseWeddingDate } from '../lib/weddingUtils';
+import { PLANNER_STORAGE_KEYS } from '../lib/plannerStorage';
+import { usePlannerStorage } from '../hooks/usePlannerStorage';
 import { toast } from 'sonner';
 
 const VENDOR_CATEGORIES = [
@@ -23,7 +25,9 @@ const VENDOR_CATEGORIES = [
 const TASK_STATUSES = ['not-started', 'in-progress', 'completed'];
 
 export const Tasks = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, saveTasks, , { loading, syncError }] = usePlannerStorage(
+    PLANNER_STORAGE_KEYS.tasks
+  );
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -37,31 +41,6 @@ export const Tasks = () => {
     status: 'not-started',
     priority: 'medium'
   });
-
-  useEffect(() => {
-    loadTasks();
-  }, []);
-
-  const loadTasks = () => {
-    const saved = localStorage.getItem('tasks');
-    if (saved) {
-      try {
-        setTasks(JSON.parse(saved));
-      } catch {
-        setTasks([]);
-        localStorage.setItem('tasks', JSON.stringify([]));
-      }
-      return;
-    }
-
-    setTasks([]);
-    localStorage.setItem('tasks', JSON.stringify([]));
-  };
-
-  const saveTasks = (updatedTasks) => {
-    setTasks(updatedTasks);
-    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-  };
 
   const addTask = () => {
     if (!newTask.title || !newTask.category) {
@@ -207,6 +186,12 @@ export const Tasks = () => {
             <div>
               <h1 className="heading-section mb-2">Wedding Tasks</h1>
               <p className="text-muted-foreground">Organize and track all your wedding planning tasks</p>
+              {loading && (
+                <p className="text-xs text-muted-foreground mt-2">Loading tasks from server…</p>
+              )}
+              {syncError && (
+                <p className="text-xs text-destructive mt-2" role="alert">{syncError}</p>
+              )}
             </div>
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>

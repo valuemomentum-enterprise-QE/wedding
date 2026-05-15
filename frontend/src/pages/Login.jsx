@@ -11,16 +11,26 @@ export const Login = () => {
   const { couple } = useWeddingSiteData();
   const [passcode, setPasscode] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const from = location.state?.from || '/planner';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loginWithPasscode(passcode.trim())) {
-      navigate(from, { replace: true });
-      return;
+    setSubmitting(true);
+    setError('');
+    try {
+      const ok = await loginWithPasscode(passcode.trim());
+      if (ok) {
+        navigate(from, { replace: true });
+        return;
+      }
+      setError('Incorrect passcode. Please try again.');
+    } catch {
+      setError('Could not sign in. Try again in a moment.');
+    } finally {
+      setSubmitting(false);
     }
-    setError('Incorrect passcode. Please try again.');
   };
 
   const initials = `${couple.groom || 'G'} & ${couple.bride || 'B'}`;
@@ -51,8 +61,8 @@ export const Login = () => {
             className="w-full px-4 py-3 rounded-full border border-foreground/30 bg-cream/80 text-center text-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
           />
           {error && <p className="text-xs text-floral-red">{error}</p>}
-          <LandingButton type="submit" variant="filled" className="w-full">
-            Enter Planner
+          <LandingButton type="submit" variant="filled" className="w-full" disabled={submitting}>
+            {submitting ? 'Signing in…' : 'Enter Planner'}
           </LandingButton>
         </form>
 

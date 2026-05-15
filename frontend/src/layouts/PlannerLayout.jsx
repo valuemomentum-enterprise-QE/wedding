@@ -6,7 +6,6 @@ import Dashboard from '../pages/Dashboard';
 import Tasks from '../pages/Tasks';
 import Budget from '../pages/Budget';
 import Events from '../pages/Events';
-import Vendors from '../pages/Vendors';
 import Guests from '../pages/Guests';
 import Decorations from '../pages/Decorations';
 import Settings from '../pages/Settings';
@@ -42,7 +41,6 @@ export const PlannerLayout = ({ weddingData, updateWeddingData }) => {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/budget" element={<Budget weddingData={weddingData} />} />
           <Route path="/events" element={<Events />} />
-          <Route path="/vendors" element={<Vendors />} />
           <Route path="/guests" element={<Guests />} />
           <Route path="/decorations" element={<Decorations />} />
           <Route

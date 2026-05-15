@@ -1,27 +1,32 @@
-const AUTH_KEY = 'weddingPlannerAuth';
-const DEFAULT_PASSCODE = '16102026';
+import { setPlannerToken, getPlannerToken } from './apiClient';
+import { loginPlannerApi } from './plannerApi';
 
-export function getPlannerPasscode() {
-  try {
-    const data = JSON.parse(localStorage.getItem('weddingPlannerData') || '{}');
-    return data?.settings?.plannerPasscode || DEFAULT_PASSCODE;
-  } catch {
-    return DEFAULT_PASSCODE;
-  }
-}
+const AUTH_KEY = 'weddingPlannerAuth';
 
 export function isPlannerAuthenticated() {
-  return sessionStorage.getItem(AUTH_KEY) === 'true';
+  return sessionStorage.getItem(AUTH_KEY) === 'true' && Boolean(getPlannerToken());
 }
 
-export function loginWithPasscode(passcode) {
-  if (passcode === getPlannerPasscode()) {
+export async function loginWithPasscode(passcode) {
+  const trimmed = passcode.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  try {
+    const token = await loginPlannerApi(trimmed);
+    setPlannerToken(token);
     sessionStorage.setItem(AUTH_KEY, 'true');
     return true;
+  } catch (error) {
+    if (error.status === 401) {
+      return false;
+    }
+    throw error;
   }
-  return false;
 }
 
 export function logoutPlanner() {
   sessionStorage.removeItem(AUTH_KEY);
+  setPlannerToken(null);
 }
