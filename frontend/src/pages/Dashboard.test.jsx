@@ -82,10 +82,25 @@ describe('Dashboard – functional', () => {
     expect(link).toHaveAttribute('href', '/planner/decorations');
   });
 
-  it('renders priority tasks section', () => {
+  it('renders priority tasks section', async () => {
+    localStorage.setItem(
+      'tasks',
+      JSON.stringify([
+        {
+          id: '1',
+          title: 'Finalize wedding venue',
+          category: 'Venue',
+          dueDate: '2026-04-12',
+          priority: 'high',
+          status: 'not-started',
+        },
+      ])
+    );
     renderDashboard();
     expect(screen.getByText('Priority Tasks')).toBeInTheDocument();
-    expect(screen.getByText('Finalize wedding venue')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Finalize wedding venue')).toBeInTheDocument();
+    });
   });
 });
 

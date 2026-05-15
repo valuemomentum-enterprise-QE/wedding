@@ -13,8 +13,8 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			cream: '#F9F6F0',
-  			peach: '#F2D1B3',
+  			cream: '#F9F4EC',
+  			peach: '#F3D2BC',
   			'floral-red': '#C41E3A',
   			sage: '#5C7A52',
   			background: 'hsl(var(--background))',

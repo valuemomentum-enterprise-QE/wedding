@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+#emergent-badge,
+a[href*="emergent.sh"][id="emergent-badge"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -18,8 +25,8 @@ code {
 @layer base {
     :root {
         /* Floral landing + planner palette (cream, peach, botanical) */
-        --cream: #F9F6F0;
-        --peach: #F2D1B3;
+        --cream: #F9F4EC;
+        --peach: #F3D2BC;
         --floral-red: #C41E3A;
         --sage: #5C7A52;
 
@@ -153,6 +160,15 @@ code {
 
     .landing-page {
         font-family: 'Jost', 'Inter', sans-serif;
+        background-color: var(--cream);
+    }
+
+    .landing-section-cream {
+        background-color: var(--cream);
+    }
+
+    .landing-section-peach {
+        background-color: var(--peach);
     }
 
     .planner-shell {

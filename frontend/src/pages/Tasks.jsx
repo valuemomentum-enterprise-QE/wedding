@@ -12,6 +12,7 @@ import { Calendar } from '../components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Plus, Calendar as CalendarIcon, User, Trash2, Check, Edit } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseWeddingDate } from '../lib/weddingUtils';
 import { toast } from 'sonner';
 
 const VENDOR_CATEGORIES = [
@@ -44,59 +45,17 @@ export const Tasks = () => {
   const loadTasks = () => {
     const saved = localStorage.getItem('tasks');
     if (saved) {
-      setTasks(JSON.parse(saved));
+      try {
+        setTasks(JSON.parse(saved));
+      } catch {
+        setTasks([]);
+        localStorage.setItem('tasks', JSON.stringify([]));
+      }
       return;
     }
 
-    // Default tasks sourced from Wedding Planner.pdf (To-do + dependency sheets)
-    const defaultTasks = [
-      // Page 1 - main "To do" sheet
-      { id: '1', title: 'Finalize wedding date', category: 'Other', status: 'completed', assignedTo: 'JD and JC', dueDate: '2026-03-13', priority: 'high', description: 'August 16th 2026. Blocker: Another date discussion.' },
-      { id: '2', title: 'Finalize Wedding Venue', category: 'Venue', status: 'in-progress', assignedTo: 'JD and JC', dueDate: '2026-04-12', priority: 'high', description: 'Finding venues, visit in person, budget validation, 2 venues to be decided. Estimate: $5000.' },
-      { id: '3', title: 'Wedding E invite - RSVP', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '4', title: 'Priest Booking for Wedding', category: 'Ceremony', status: 'completed', assignedTo: 'JD and JC', dueDate: '2026-03-18', priority: 'high', description: 'Booked for Aug 16th - Sharad pandit. Estimate: $1000.' },
-      { id: '5', title: 'Indian visitor flights/Insurance for parents', category: 'Transportation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '6', title: 'Credit cards - balance transfer / points / Travel Cards', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'low', description: 'Blocker: Apply Travel Credit Card - Amex.' },
-      { id: '7', title: 'Wedding Sign board', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'low', description: '' },
-      { id: '8', title: 'Marriage License Application', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: '' },
-      { id: '9', title: 'Book Photography and Videography', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '10', title: 'Book accommodations', category: 'Accommodation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '11', title: 'Event Decoration', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '12', title: 'Return gift (from India)', category: 'Other', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '13', title: 'Henna/haldi activities book', category: 'Ceremony', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '14', title: 'Make-up packages book', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '15', title: 'Airbnb Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '16', title: 'Cutlery/Plates/Cups', category: 'Other', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'low', description: '' },
-      { id: '17', title: 'Audio/DJ', category: 'Audio/DJ', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '18', title: "Jay's Anna Family Visa's and Uncle Visa", category: 'Other', status: 'in-progress', assignedTo: 'JD', dueDate: '2026-04-01', priority: 'high', description: 'Dubai halt, Uncle slot on April 1st.' },
-      { id: '19', title: "JC's DIL Visa", category: 'Other', status: 'completed', assignedTo: 'JC', dueDate: null, priority: 'high', description: '' },
-      { id: '20', title: 'Sangeeth/ Engagement', category: 'Ceremony', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '21', title: 'Rental Car', category: 'Transportation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '22', title: 'Airbnb', category: 'Accommodation', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: 'Based on Venue.' },
-      { id: '23', title: 'Wedding Costume Trial Check', category: 'Attire', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '24', title: 'JD Pooja & Priest', category: 'Ceremony', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: 'Blocker: Until JC Mom is in USA.' },
-      { id: '25', title: 'Dress Fit Check', category: 'Attire', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'medium', description: '' },
-
-      // Page 2 - dependency / vendor task sheet
-      { id: '26', title: 'Mehendi Artist', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '27', title: 'Hair', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '28', title: 'MakeUp', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '29', title: 'Saree Draping', category: 'Attire', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '30', title: 'Event Design Templates', category: 'Decoration', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'low', description: '' },
-      { id: '31', title: 'Catering', category: 'Catering', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '32', title: 'Venue Decision', category: 'Venue', status: 'not-started', assignedTo: 'JD and JC', dueDate: null, priority: 'high', description: 'Dependency: 7, 14, 9.' },
-      { id: '33', title: 'Airbnb Stay', category: 'Accommodation', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '34', title: 'Photographer/Video', category: 'Photography', status: 'not-started', assignedTo: 'JD', dueDate: null, priority: 'high', description: '' },
-      { id: '35', title: 'Haldi Deco', category: 'Decoration', status: 'not-started', assignedTo: '', dueDate: null, priority: 'medium', description: '' },
-      { id: '36', title: 'Car Rental', category: 'Transportation', status: 'not-started', assignedTo: '', dueDate: null, priority: 'medium', description: '' },
-      { id: '37', title: 'Deco', category: 'Decoration', status: 'not-started', assignedTo: 'JC/JD', dueDate: null, priority: 'medium', description: '' },
-
-      // Page 9 - additional tasks
-      { id: '38', title: 'Open Savings Account', category: 'Other', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' },
-      { id: '39', title: 'India Flight Dates confirm to Anna', category: 'Transportation', status: 'not-started', assignedTo: 'JC', dueDate: null, priority: 'medium', description: '' }
-    ];
-    setTasks(defaultTasks);
-    localStorage.setItem('tasks', JSON.stringify(defaultTasks));
+    setTasks([]);
+    localStorage.setItem('tasks', JSON.stringify([]));
   };
 
   const saveTasks = (updatedTasks) => {
@@ -208,7 +167,7 @@ export const Tasks = () => {
           {task.dueDate && (
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <CalendarIcon className="w-3 h-3" />
-              {format(new Date(task.dueDate), 'MMM dd')}
+              {format(parseWeddingDate(task.dueDate), 'MMM dd')}
             </span>
           )}
         </div>
@@ -437,13 +396,13 @@ export const Tasks = () => {
                         <PopoverTrigger asChild>
                           <Button variant="outline" className="w-full justify-start text-left font-normal">
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {editingTask.dueDate ? format(new Date(editingTask.dueDate), 'PPP') : 'Pick a date'}
+                            {editingTask.dueDate ? format(parseWeddingDate(editingTask.dueDate), 'PPP') : 'Pick a date'}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
-                            selected={editingTask.dueDate ? new Date(editingTask.dueDate) : null}
+                            selected={editingTask.dueDate ? parseWeddingDate(editingTask.dueDate) : null}
                             onSelect={(date) => setEditingTask({ ...editingTask, dueDate: date ? format(date, 'yyyy-MM-dd') : null })}
                             initialFocus
                           />

@@ -39,42 +39,17 @@ export const Budget = ({ weddingData }) => {
   const loadBudget = () => {
     const saved = localStorage.getItem('budgetItems');
     if (saved) {
-      setBudgetItems(JSON.parse(saved));
+      try {
+        setBudgetItems(JSON.parse(saved));
+      } catch {
+        setBudgetItems([]);
+        localStorage.setItem('budgetItems', JSON.stringify([]));
+      }
       return;
     }
 
-    // Default budget sourced from Wedding Planner.pdf (USA, India, and debt sheets)
-    const defaultItems = [
-      // USA Expenses (USD)
-      { id: '1', category: 'Accommodation', description: 'Dubai + India = US Land avtaru - Airbnb', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '2', category: 'Catering', description: 'Catering', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '3', category: 'Other', description: 'House Cleaning Stuff - Walmart', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '4', category: 'Attire', description: 'Groom Dress', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '5', category: 'Ceremony', description: 'JD Pooja & Priest', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '6', category: 'Ceremony', description: 'JD Pooja & Priest Venue', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '7', category: 'Ceremony', description: 'Pelli/Pooja Samagri Misc', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '8', category: 'Venue', description: 'Wedding hall + dining room + 2 changing rooms + tables + chairs for 8 hours', estimatedCost: 2500, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '9', category: 'Ceremony', description: 'Priest fee', estimatedCost: 4500, actualCost: 0, currency: 'USD', paidBy: '', notes: 'PDF lists $4,500 in the amount column. Breakdown shown in PDF: wedding $1,300 + vratham $700 (additional fees not itemized).' },
-      { id: '10', category: 'Decoration', description: 'Decorations', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '11', category: 'Other', description: 'Bride Makeup, Hair, Drapping, Artist travel expense', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '12', category: 'Photography', description: 'Photographer', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-      { id: '13', category: 'Videography', description: 'VideoGrapher', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: '', notes: '' },
-
-      // India Expenses (INR)
-      { id: '14', category: 'Ceremony', description: 'Pooja Samagri', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '15', category: 'Ceremony', description: 'Pelli Samagri', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '16', category: 'Attire', description: 'Groom Dress', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '17', category: 'Attire', description: 'Bride Dress', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '18', category: 'Return Gifts', description: 'Return Gift', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '19', category: 'Transportation', description: 'Flight Tickets - JD/JC', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-      { id: '20', category: 'Sweets', description: 'Sweets', estimatedCost: 0, actualCost: 0, currency: 'INR', paidBy: '', notes: '' },
-
-      // Debt Expenses to Collect (USD)
-      { id: '21', category: 'Other', description: 'JD Splitwise', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'JD Splitwise', notes: 'Debt to collect' },
-      { id: '22', category: 'Other', description: 'Parents chuskuntaru', estimatedCost: 0, actualCost: 0, currency: 'USD', paidBy: 'Parents chuskuntaru', notes: 'Debt to collect' }
-    ];
-    setBudgetItems(defaultItems);
-    localStorage.setItem('budgetItems', JSON.stringify(defaultItems));
+    setBudgetItems([]);
+    localStorage.setItem('budgetItems', JSON.stringify([]));
   };
 
   const saveBudget = (items) => {

@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Calendar, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseWeddingDate } from '../lib/weddingUtils';
 
 export const Events = () => {
   const [events, setEvents] = useState([]);
@@ -21,7 +22,7 @@ export const Events = () => {
 
     // Default events sourced from Wedding Planner.pdf events sheet
     const defaultEvents = [
-      { id: '1', name: 'Airbnb Stay - All Settle', date: '2026-08-13', time: 'All Day', venue: 'Airbnb', description: 'Family and guests arrival and settle in. Catering provided.', type: 'preparation' },
+      { id: '1', name: 'Airbnb Family Stay', date: '2026-08-13', time: 'All Day', venue: 'Airbnb', description: 'Family and guests arrival and settle in. Catering provided.', type: 'preparation' },
       { id: '2', name: 'Engagement and Sangeeth', date: '2026-08-14', time: 'Evening', venue: 'Outside', description: 'Ring ceremony and music celebration. Catering provided.', type: 'celebration' },
       { id: '3', name: 'Raata Staphana + Pooja', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Traditional pre-wedding ritual. Catering provided.', type: 'ceremony' },
       { id: '4', name: 'Haldi', date: '2026-08-15', time: 'Morning', venue: 'Airbnb', description: 'Haldi ceremony. Catering provided.', type: 'ceremony' },
@@ -59,7 +60,9 @@ export const Events = () => {
       {/* Timeline */}
       <div className="container-custom py-8">
         <div className="max-w-4xl mx-auto">
-          {events.map((event, index) => (
+          {events.map((event, index) => {
+            const eventDate = parseWeddingDate(event.date);
+            return (
             <div key={event.id} className="relative pb-8 last:pb-0">
               {/* Timeline line */}
               {index !== events.length - 1 && (
@@ -73,8 +76,8 @@ export const Events = () => {
                     <Calendar className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div className="mt-2 text-center">
-                    <p className="text-xs font-medium">{format(new Date(event.date), 'MMM')}</p>
-                    <p className="text-lg font-semibold">{format(new Date(event.date), 'd')}</p>
+                    <p className="text-xs font-medium">{format(eventDate, 'MMM')}</p>
+                    <p className="text-lg font-semibold">{format(eventDate, 'd')}</p>
                   </div>
                 </div>
 
@@ -107,7 +110,8 @@ export const Events = () => {
                 </Card>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -13,6 +13,13 @@ function App() {
 
   useEffect(() => {
     const initializeData = () => {
+      const plannerStorageVersion = '2';
+      if (localStorage.getItem('plannerStorageVersion') !== plannerStorageVersion) {
+        localStorage.setItem('tasks', JSON.stringify([]));
+        localStorage.setItem('budgetItems', JSON.stringify([]));
+        localStorage.setItem('plannerStorageVersion', plannerStorageVersion);
+      }
+
       const savedData = localStorage.getItem('weddingPlannerData');
 
       if (savedData) {
@@ -20,12 +27,12 @@ function App() {
       } else {
         const defaultData = {
           couple: {
-            bride: 'JC',
-            groom: 'JD',
-            brideFullName: 'JC',
-            groomFullName: 'JD',
+            bride: 'Jahnavi',
+            groom: 'Jayadeep',
+            brideFullName: 'Jahnavi Chintakindi',
+            groomFullName: 'Jayadeep Ram Guttikonda',
             weddingDate: '2026-08-16',
-            location: 'USA',
+            location: 'New Jersey,USA',
           },
           venue: {
             time: '3:00 PM onwards',
