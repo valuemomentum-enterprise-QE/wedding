@@ -26,7 +26,7 @@ export const Login = () => {
   const initials = `${couple.groom || 'G'} & ${couple.bride || 'B'}`;
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-6 py-16 relative overflow-hidden font-body">
+    <div className="min-h-screen bg-cream flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 relative overflow-hidden font-body max-w-[100vw]">
       <FloralDecoration position="top-left" className="top-0 left-0 opacity-60" />
       <FloralDecoration position="bottom-right" className="bottom-0 right-0 opacity-60" />
 

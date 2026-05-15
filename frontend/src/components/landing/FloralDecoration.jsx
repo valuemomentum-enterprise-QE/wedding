@@ -15,7 +15,7 @@ export const FloralDecoration = ({ size = 'md', className = '' }) => (
     alt=""
     aria-hidden="true"
     draggable={false}
-    className={`pointer-events-none absolute h-auto max-w-none select-none mix-blend-multiply ${SIZE_CLASSES[size]} ${className}`}
+    className={`pointer-events-none absolute h-auto max-w-[min(28vw,7rem)] sm:max-w-none select-none mix-blend-multiply ${SIZE_CLASSES[size]} ${className}`}
   />
 );
 

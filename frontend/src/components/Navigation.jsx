@@ -85,8 +85,8 @@ export const Navigation = ({ weddingData, plannerPrefix = '/planner', onLogout }
 
   return (
     <>
-      <header className="md:hidden fixed top-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-b border-border/50">
-        <div className="flex items-center justify-between px-4 py-3">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-b border-border/50 pt-[env(safe-area-inset-top)]">
+        <div className="flex items-center justify-between px-4 py-3 min-h-14">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-peach flex items-center justify-center">
               <Heart className="w-4 h-4 text-foreground" strokeWidth={1.5} />
@@ -110,28 +110,26 @@ export const Navigation = ({ weddingData, plannerPrefix = '/planner', onLogout }
         <NavContent />
       </aside>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border/50">
-        <div className="flex items-center justify-around px-2 py-2">
-          {navItems.slice(0, 5).map((item) => {
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border/50 pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-stretch overflow-x-auto scrollbar-none overscroll-x-contain px-1 py-2 gap-0.5">
+          {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path, item.end);
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all ${
+                className={`flex flex-col items-center justify-center gap-0.5 min-w-[4.25rem] shrink-0 px-2 py-2 rounded-lg transition-all touch-manipulation ${
                   active ? 'text-primary' : 'text-muted-foreground'
                 }`}
               >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <Icon className="w-5 h-5 shrink-0" />
+                <span className="text-[10px] font-medium leading-tight text-center">{item.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
-
-      <div className="md:hidden h-14" />
     </>
   );
 };
