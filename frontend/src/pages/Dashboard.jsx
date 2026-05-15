@@ -11,7 +11,6 @@ import {
   DollarSign, 
   Users, 
   ArrowRight,
-  AlertCircle,
   Heart,
   Sparkles
 } from 'lucide-react';
@@ -35,12 +34,13 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
     totalGuests: 0,
     rsvpYes: 0
   });
+  const [priorityTasks, setPriorityTasks] = useState([]);
 
   useEffect(() => {
-    const tasks = loadLocalStorageJson('tasks');
-    const events = loadLocalStorageJson('events');
-    const budgetItems = loadLocalStorageJson('budgetItems');
-    const guests = loadLocalStorageJson('guests');
+    const tasks = loadLocalStorageJson('tasks', []);
+    const events = loadLocalStorageJson('events', []);
+    const budgetItems = loadLocalStorageJson('budgetItems', []);
+    const guests = loadLocalStorageJson('guests', []);
 
     const computed = calculateDashboardStats({
       tasks,
@@ -59,6 +59,12 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
       totalGuests: computed.totalGuests,
       rsvpYes: computed.rsvpYes,
     });
+
+    setPriorityTasks(
+      tasks
+        .filter((task) => task.status !== 'completed' && task.priority === 'high')
+        .slice(0, 5)
+    );
   }, [exchangeRate]);
 
   const weddingDate = parseWeddingDate(weddingData?.couple?.weddingDate);
@@ -69,13 +75,6 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
   const budgetPercentage = stats.totalBudget > 0
     ? Math.round((stats.spent / stats.totalBudget) * 100)
     : 0;
-
-  // Priority tasks for after-work view
-  const priorityTasks = [
-    { id: 1, title: 'Finalize wedding venue', category: 'Venue', dueDate: '2026-04-12', priority: 'high' },
-    { id: 2, title: 'Book photography and videography', category: 'Photography', dueDate: '2026-03-25', priority: 'high' },
-    { id: 3, title: 'Event decoration planning', category: 'Decoration', dueDate: '2026-05-10', priority: 'medium' }
-  ];
 
   return (
     <div className="min-h-screen pt-14 md:pt-0">
@@ -204,7 +203,9 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
                       <p className="font-medium text-sm mb-1">{task.title}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Badge variant="secondary" className="text-xs">{task.category}</Badge>
-                        <span>Due: {format(parseWeddingDate(task.dueDate), 'MMM dd')}</span>
+                        {task.dueDate && (
+                          <span>Due: {format(parseWeddingDate(task.dueDate), 'MMM dd')}</span>
+                        )}
                       </div>
                     </div>
                     <Badge
@@ -239,24 +240,6 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
               <p className="text-sm text-muted-foreground mt-2">Big tasks that need dedicated time</p>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="p-4 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10">
-                <h4 className="font-medium mb-2 text-sm">This Weekend</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 text-primary" />
-                    <span>Visit wedding venues (Razberry, Perona Farms)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 text-primary" />
-                    <span>Wedding costume trial and dress fit check</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 text-primary" />
-                    <span>Review decoration catalog options</span>
-                  </li>
-                </ul>
-              </div>
-
               <div className="p-4 rounded-lg bg-muted/50">
                 <h4 className="font-medium mb-2 text-sm">Quick Reminders</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">

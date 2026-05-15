@@ -13,6 +13,13 @@ function App() {
 
   useEffect(() => {
     const initializeData = () => {
+      const plannerStorageVersion = '2';
+      if (localStorage.getItem('plannerStorageVersion') !== plannerStorageVersion) {
+        localStorage.setItem('tasks', JSON.stringify([]));
+        localStorage.setItem('budgetItems', JSON.stringify([]));
+        localStorage.setItem('plannerStorageVersion', plannerStorageVersion);
+      }
+
       const savedData = localStorage.getItem('weddingPlannerData');
 
       if (savedData) {

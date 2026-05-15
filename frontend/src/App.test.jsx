@@ -19,7 +19,8 @@ describe('App – public landing', () => {
       expect(screen.getByText(/RSVP Here/i)).toBeInTheDocument();
     });
     expect(screen.getByText(/A WHIRLWIND ROMANCE/i)).toBeInTheDocument();
-    expect(screen.getByText(/Couple login/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Couple login/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/Open menu/i)).toBeInTheDocument();
   });
 
   it('initializes wedding data in localStorage', async () => {

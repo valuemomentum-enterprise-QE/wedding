@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ChevronDown, Leaf } from 'lucide-react';
 import { FloralDecoration } from '../components/landing/FloralDecoration';
 import { LandingButton } from '../components/landing/LandingButton';
+import { LandingSideNav } from '../components/landing/LandingSideNav';
 import { useWeddingSiteData } from '../hooks/useWeddingSiteData';
 
 const PHOTOS = {
@@ -15,7 +15,7 @@ const PHOTOS = {
 };
 
 export const Landing = () => {
-  const { couple, venue, story, registry, rsvp } = useWeddingSiteData();
+  const { couple, venue, story, rsvp } = useWeddingSiteData();
   const groomName = (couple.groomFullName || couple.groom || 'Groom').toUpperCase();
   const brideName = (couple.brideFullName || couple.bride || 'Bride').toUpperCase();
   const initials = `${couple.groom || 'G'} & ${couple.bride || 'B'}`;
@@ -26,6 +26,7 @@ export const Landing = () => {
 
   return (
     <div className="landing-page min-h-screen bg-cream text-foreground font-body">
+      <LandingSideNav groom={couple.groom} bride={couple.bride} />
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden bg-cream">
         <FloralDecoration position="top-left" className="top-0 left-0" />
         <FloralDecoration position="top-right" className="top-0 right-0" />
@@ -96,16 +97,7 @@ export const Landing = () => {
             THEY&apos;RE EXCITED<br />TO SEE YOU THERE!
           </h2>
           <ChevronDown className="w-5 h-5 mx-auto mb-8 text-foreground/50" strokeWidth={1} />
-          <p className="text-sm text-foreground/75 mb-8">
-            They are registered at{' '}
-            <a href={registry.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground transition-colors">
-              {registry.label}
-            </a>
-          </p>
           <LandingButton variant="filled" onClick={scrollToRsvp}>{rsvp.label || 'RSVP'}</LandingButton>
-          <p className="mt-16 text-xs text-foreground/40 tracking-widest">
-            <Link to="/login" className="hover:text-foreground/70 transition-colors">Couple login</Link>
-          </p>
         </div>
       </section>
     </div>
