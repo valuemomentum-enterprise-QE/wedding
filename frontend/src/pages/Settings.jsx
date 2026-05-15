@@ -8,6 +8,7 @@ import { Calendar } from '../components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Settings as SettingsIcon, Calendar as CalendarIcon, DollarSign, Mail, Save, Bell } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseWeddingDate } from '../lib/weddingUtils';
 import { toast } from 'sonner';
 
 export const Settings = ({ weddingData, updateWeddingData }) => {
@@ -20,6 +21,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
     secondaryCurrency: 'INR',
     exchangeRate: 83.5,
     emails: '',
+    plannerPasscode: '',
   });
 
   useEffect(() => {
@@ -27,12 +29,13 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
       setSettings({
         bride: weddingData.couple?.bride || 'JC',
         groom: weddingData.couple?.groom || 'JD',
-        weddingDate: new Date(weddingData.couple?.weddingDate || '2026-08-16'),
+        weddingDate: parseWeddingDate(weddingData.couple?.weddingDate),
         location: weddingData.couple?.location || 'USA',
         primaryCurrency: weddingData.settings?.primaryCurrency || 'USD',
         secondaryCurrency: weddingData.settings?.secondaryCurrency || 'INR',
         exchangeRate: weddingData.settings?.exchangeRate || 83.5,
         emails: weddingData.settings?.emails?.join(', ') || '',
+        plannerPasscode: weddingData.settings?.plannerPasscode || '16102026',
       });
     }
   }, [weddingData]);
@@ -55,7 +58,8 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
         secondaryCurrency: settings.secondaryCurrency,
         exchangeRate: parseFloat(settings.exchangeRate),
         emails: emailList,
-        theme: weddingData?.settings?.theme || 'light'
+        theme: weddingData?.settings?.theme || 'light',
+        plannerPasscode: settings.plannerPasscode || '16102026',
       }
     };
 
@@ -141,6 +145,29 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Planner access */}
+          <Card className="card-elegant">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base font-display tracking-widest">
+                Private planner passcode
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Label htmlFor="plannerPasscode">Couple login passcode</Label>
+              <Input
+                id="plannerPasscode"
+                type="password"
+                value={settings.plannerPasscode}
+                onChange={(e) => setSettings({ ...settings, plannerPasscode: e.target.value })}
+                placeholder="Passcode for /login"
+                className="mt-2 max-w-xs"
+              />
+              <p className="text-xs text-muted-foreground mt-2">
+                Used on the wedding site under Couple login. Default: 16102026
+              </p>
             </CardContent>
           </Card>
 
