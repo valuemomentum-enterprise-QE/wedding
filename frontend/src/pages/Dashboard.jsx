@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -19,53 +19,12 @@ import {
   parseWeddingDate,
   getDaysUntilWedding,
   formatWeddingDateLong,
-  calculateDashboardStats,
-  loadLocalStorageJson,
 } from '../lib/weddingUtils';
+import { useDashboardStats } from '../hooks/useDashboardStats';
 
 export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
   const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
-  const [stats, setStats] = useState({
-    totalTasks: 0,
-    completedTasks: 0,
-    upcomingEvents: 0,
-    totalBudget: 0,
-    spent: 0,
-    totalGuests: 0,
-    rsvpYes: 0
-  });
-  const [priorityTasks, setPriorityTasks] = useState([]);
-
-  useEffect(() => {
-    const tasks = loadLocalStorageJson('tasks', []);
-    const events = loadLocalStorageJson('events', []);
-    const budgetItems = loadLocalStorageJson('budgetItems', []);
-    const guests = loadLocalStorageJson('guests', []);
-
-    const computed = calculateDashboardStats({
-      tasks,
-      events,
-      budgetItems,
-      guests,
-      exchangeRate,
-    });
-
-    setStats({
-      totalTasks: computed.totalTasks,
-      completedTasks: computed.completedTasks,
-      upcomingEvents: computed.upcomingEvents,
-      totalBudget: computed.totalBudget,
-      spent: computed.spent,
-      totalGuests: computed.totalGuests,
-      rsvpYes: computed.rsvpYes,
-    });
-
-    setPriorityTasks(
-      tasks
-        .filter((task) => task.status !== 'completed' && task.priority === 'high')
-        .slice(0, 5)
-    );
-  }, [exchangeRate]);
+  const { stats, priorityTasks } = useDashboardStats(exchangeRate);
 
   const weddingDate = parseWeddingDate(weddingData?.couple?.weddingDate);
   const daysUntilWedding = getDaysUntilWedding(weddingDate);
@@ -243,7 +202,7 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
               <div className="p-4 rounded-lg bg-muted/50">
                 <h4 className="font-medium mb-2 text-sm">Quick Reminders</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Set aside 2-3 hours on weekends for venue visits and vendor meetings. 
+                  Set aside 2-3 hours on weekends for venue visits and planning sessions.
                   Book appointments in advance to make the most of your time.
                 </p>
               </div>
@@ -258,7 +217,7 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
           <Link to={`${plannerPrefix}/guests`}>
             <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
               <CardContent className="pt-6 text-center">
@@ -273,15 +232,6 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
               <CardContent className="pt-6 text-center">
                 <Sparkles className="w-8 h-8 mx-auto mb-3 text-secondary" />
                 <p className="font-medium text-sm">Browse Decor</p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to={`${plannerPrefix}/vendors`}>
-            <Card className="card-elegant hover:shadow-[var(--shadow-medium)] transition-all cursor-pointer">
-              <CardContent className="pt-6 text-center">
-                <Users className="w-8 h-8 mx-auto mb-3 text-accent" />
-                <p className="font-medium text-sm">View Vendors</p>
               </CardContent>
             </Card>
           </Link>

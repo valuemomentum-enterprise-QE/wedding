@@ -8,6 +8,57 @@ const mockWeddingData = {
   settings: { exchangeRate: 83.5 },
 };
 
+const mockTasks = [
+  { status: 'completed' },
+  { status: 'completed' },
+  { status: 'completed' },
+  ...Array(36).fill({ status: 'not-started' }),
+];
+
+const mockBudget = [{ estimatedCost: 7000, actualCost: 0, currency: 'USD' }];
+
+function mockJsonResponse(body) {
+  return {
+    ok: true,
+    status: 200,
+    text: () => Promise.resolve(JSON.stringify(body)),
+  };
+}
+
+const mockEvents = Array(11).fill({ date: '2026-08-16' });
+
+const mockGuests = [
+  ...Array(7).fill({ rsvpStatus: 'yes' }),
+  ...Array(81).fill({ rsvpStatus: 'pending' }),
+];
+
+function setupApiMocks(overrides = {}) {
+  const tasks = overrides.tasks ?? mockTasks;
+  const budgetItems = overrides.budgetItems ?? mockBudget;
+  const events = overrides.events ?? mockEvents;
+  const guests = overrides.guests ?? mockGuests;
+
+  sessionStorage.setItem('weddingPlannerAuth', 'true');
+  sessionStorage.setItem('weddingPlannerToken', 'test-jwt');
+
+  global.fetch = jest.fn((url) => {
+    const path = String(url);
+    if (path.includes('/api/tasks')) {
+      return Promise.resolve(mockJsonResponse({ items: tasks }));
+    }
+    if (path.includes('/api/budget')) {
+      return Promise.resolve(mockJsonResponse({ items: budgetItems }));
+    }
+    if (path.includes('/api/events')) {
+      return Promise.resolve(mockJsonResponse({ items: events }));
+    }
+    if (path.includes('/api/guests')) {
+      return Promise.resolve(mockJsonResponse({ items: guests }));
+    }
+    return Promise.reject(new Error(`Unexpected fetch: ${url}`));
+  });
+}
+
 function renderDashboard(weddingData = mockWeddingData) {
   return render(
     <MemoryRouter initialEntries={['/planner']}>
@@ -19,24 +70,7 @@ function renderDashboard(weddingData = mockWeddingData) {
 describe('Dashboard – functional', () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem(
-      'tasks',
-      JSON.stringify([
-        { status: 'completed' },
-        { status: 'completed' },
-        { status: 'completed' },
-        ...Array(36).fill({ status: 'not-started' }),
-      ])
-    );
-    localStorage.setItem('events', JSON.stringify(Array(11).fill({})));
-    localStorage.setItem('guests', JSON.stringify([
-      ...Array(7).fill({ rsvpStatus: 'yes' }),
-      ...Array(81).fill({ rsvpStatus: 'pending' }),
-    ]));
-    localStorage.setItem(
-      'budgetItems',
-      JSON.stringify([{ estimatedCost: 7000, actualCost: 0, currency: 'USD' }])
-    );
+    setupApiMocks();
   });
 
   it('renders hero with countdown and wedding date', () => {
@@ -45,7 +79,7 @@ describe('Dashboard – functional', () => {
     expect(screen.getByText(/August 16th, 2026/i)).toBeInTheDocument();
   });
 
-  it('shows task completion stats from localStorage', async () => {
+  it('shows task completion stats from API', async () => {
     renderDashboard();
     await waitFor(() => {
       const label = screen.getByText('Tasks Completed');
@@ -83,9 +117,8 @@ describe('Dashboard – functional', () => {
   });
 
   it('renders priority tasks section', async () => {
-    localStorage.setItem(
-      'tasks',
-      JSON.stringify([
+    setupApiMocks({
+      tasks: [
         {
           id: '1',
           title: 'Finalize wedding venue',
@@ -94,8 +127,8 @@ describe('Dashboard – functional', () => {
           priority: 'high',
           status: 'not-started',
         },
-      ])
-    );
+      ],
+    });
     renderDashboard();
     expect(screen.getByText('Priority Tasks')).toBeInTheDocument();
     await waitFor(() => {
@@ -105,7 +138,10 @@ describe('Dashboard – functional', () => {
 });
 
 describe('Dashboard – non-functional', () => {
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => {
+    localStorage.clear();
+    setupApiMocks({ tasks: [], budgetItems: [], events: [], guests: [] });
+  });
 
   it('renders primary heading once', () => {
     renderDashboard();
@@ -119,7 +155,7 @@ describe('Dashboard – non-functional', () => {
     expect(performance.now() - start).toBeLessThan(3000);
   });
 
-  it('handles empty localStorage without crashing', async () => {
+  it('handles empty API data without crashing', async () => {
     expect(() => renderDashboard()).not.toThrow();
     await waitFor(() => {
       const label = screen.getByText('Tasks Completed');

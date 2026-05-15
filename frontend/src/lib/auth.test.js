@@ -1,32 +1,42 @@
-import { getPlannerPasscode, loginWithPasscode, isPlannerAuthenticated, logoutPlanner } from './auth';
+import { loginWithPasscode, isPlannerAuthenticated, logoutPlanner } from './auth';
+
+function mockJsonResponse(body, ok = true, status = 200) {
+  return {
+    ok,
+    status,
+    text: () => Promise.resolve(JSON.stringify(body)),
+  };
+}
 
 describe('auth', () => {
   beforeEach(() => {
-    localStorage.clear();
     sessionStorage.clear();
-    localStorage.setItem(
-      'weddingPlannerData',
-      JSON.stringify({ settings: { plannerPasscode: 'test1234' } })
-    );
+    global.fetch = jest.fn((url) => {
+      if (String(url).includes('/api/auth/login')) {
+        return Promise.resolve(mockJsonResponse({ token: 'test-jwt-token' }));
+      }
+      return Promise.reject(new Error(`Unexpected fetch: ${url}`));
+    });
   });
 
-  it('reads passcode from weddingPlannerData', () => {
-    expect(getPlannerPasscode()).toBe('test1234');
-  });
-
-  it('authenticates with correct passcode', () => {
-    expect(loginWithPasscode('test1234')).toBe(true);
+  it('authenticates via API and stores token', async () => {
+    await expect(loginWithPasscode('16102026')).resolves.toBe(true);
     expect(isPlannerAuthenticated()).toBe(true);
+    expect(sessionStorage.getItem('weddingPlannerToken')).toBe('test-jwt-token');
   });
 
-  it('rejects incorrect passcode', () => {
-    expect(loginWithPasscode('wrong')).toBe(false);
+  it('rejects incorrect passcode from API', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve(mockJsonResponse({ error: 'Incorrect passcode' }, false, 401))
+    );
+    await expect(loginWithPasscode('wrong')).resolves.toBe(false);
     expect(isPlannerAuthenticated()).toBe(false);
   });
 
-  it('logout clears session', () => {
-    loginWithPasscode('test1234');
+  it('logout clears session', async () => {
+    await loginWithPasscode('16102026');
     logoutPlanner();
     expect(isPlannerAuthenticated()).toBe(false);
+    expect(sessionStorage.getItem('weddingPlannerToken')).toBeNull();
   });
 });

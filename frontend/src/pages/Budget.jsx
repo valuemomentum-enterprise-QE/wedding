@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
 import { Plus, DollarSign, TrendingUp, TrendingDown, Edit, Trash2 } from 'lucide-react';
+import { summarizeBudget } from '../lib/weddingUtils';
+import { PLANNER_STORAGE_KEYS } from '../lib/plannerStorage';
+import { usePlannerStorage } from '../hooks/usePlannerStorage';
 import { toast } from 'sonner';
 
 const BUDGET_CATEGORIES = [
@@ -17,7 +20,9 @@ const BUDGET_CATEGORIES = [
 ];
 
 export const Budget = ({ weddingData }) => {
-  const [budgetItems, setBudgetItems] = useState([]);
+  const [budgetItems, saveBudget, , { loading, syncError }] = usePlannerStorage(
+    PLANNER_STORAGE_KEYS.budgetItems
+  );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currency, setCurrency] = useState('USD');
   const [newItem, setNewItem] = useState({
@@ -31,31 +36,6 @@ export const Budget = ({ weddingData }) => {
   });
 
   const exchangeRate = weddingData?.settings?.exchangeRate || 83.5;
-
-  useEffect(() => {
-    loadBudget();
-  }, []);
-
-  const loadBudget = () => {
-    const saved = localStorage.getItem('budgetItems');
-    if (saved) {
-      try {
-        setBudgetItems(JSON.parse(saved));
-      } catch {
-        setBudgetItems([]);
-        localStorage.setItem('budgetItems', JSON.stringify([]));
-      }
-      return;
-    }
-
-    setBudgetItems([]);
-    localStorage.setItem('budgetItems', JSON.stringify([]));
-  };
-
-  const saveBudget = (items) => {
-    setBudgetItems(items);
-    localStorage.setItem('budgetItems', JSON.stringify(items));
-  };
 
   const addItem = () => {
     if (!newItem.category || !newItem.description || !newItem.estimatedCost) {
@@ -120,7 +100,7 @@ export const Budget = ({ weddingData }) => {
   };
 
   const allTotals = getTotals();
-  const usdTotals = getTotals('USD');
+  const usdTotals = summarizeBudget(budgetItems, exchangeRate);
   const inrTotals = getTotals('INR');
   const spentPercentage = allTotals.totalEstimated > 0
     ? (allTotals.totalActual / allTotals.totalEstimated) * 100
@@ -141,17 +121,28 @@ export const Budget = ({ weddingData }) => {
             <div>
               <h1 className="heading-section mb-2">Budget Tracker</h1>
               <p className="text-muted-foreground">Track expenses in both USD and INR</p>
+              {loading && (
+                <p className="text-xs text-muted-foreground mt-2">Loading budget from server…</p>
+              )}
+              {syncError && (
+                <p className="text-xs text-destructive mt-2" role="alert">{syncError}</p>
+              )}
             </div>
-            <div className="flex gap-3">
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USD">USD ($)</SelectItem>
-                  <SelectItem value="INR">INR (₹)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-3 items-end flex-wrap">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="budget-view-currency" className="text-xs text-muted-foreground">
+                  View currency
+                </Label>
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger id="budget-view-currency" className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="INR">INR (₹)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="btn-glow">
@@ -165,9 +156,9 @@ export const Budget = ({ weddingData }) => {
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
                     <div>
-                      <Label>Category *</Label>
+                      <Label htmlFor="budget-add-category">Category *</Label>
                       <Select value={newItem.category} onValueChange={(v) => setNewItem({ ...newItem, category: v })}>
-                        <SelectTrigger>
+                        <SelectTrigger id="budget-add-category">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -178,8 +169,10 @@ export const Budget = ({ weddingData }) => {
                       </Select>
                     </div>
                     <div>
-                      <Label>Description *</Label>
+                      <Label htmlFor="budget-add-description">Description *</Label>
                       <Input
+                        id="budget-add-description"
+                        name="budgetDescription"
                         value={newItem.description}
                         onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
                         placeholder="Item description"
@@ -187,8 +180,10 @@ export const Budget = ({ weddingData }) => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label>Estimated Cost *</Label>
+                        <Label htmlFor="budget-add-estimated">Estimated Cost *</Label>
                         <Input
+                          id="budget-add-estimated"
+                          name="budgetEstimatedCost"
                           type="number"
                           value={newItem.estimatedCost}
                           onChange={(e) => setNewItem({ ...newItem, estimatedCost: e.target.value })}
@@ -196,8 +191,10 @@ export const Budget = ({ weddingData }) => {
                         />
                       </div>
                       <div>
-                        <Label>Actual Cost</Label>
+                        <Label htmlFor="budget-add-actual">Actual Cost</Label>
                         <Input
+                          id="budget-add-actual"
+                          name="budgetActualCost"
                           type="number"
                           value={newItem.actualCost}
                           onChange={(e) => setNewItem({ ...newItem, actualCost: e.target.value })}
@@ -207,9 +204,9 @@ export const Budget = ({ weddingData }) => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label>Currency</Label>
+                        <Label htmlFor="budget-add-currency">Currency</Label>
                         <Select value={newItem.currency} onValueChange={(v) => setNewItem({ ...newItem, currency: v })}>
-                          <SelectTrigger>
+                          <SelectTrigger id="budget-add-currency">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -219,8 +216,10 @@ export const Budget = ({ weddingData }) => {
                         </Select>
                       </div>
                       <div>
-                        <Label>Paid By</Label>
+                        <Label htmlFor="budget-add-paid-by">Paid By</Label>
                         <Input
+                          id="budget-add-paid-by"
+                          name="budgetPaidBy"
                           value={newItem.paidBy}
                           onChange={(e) => setNewItem({ ...newItem, paidBy: e.target.value })}
                           placeholder="e.g., JD, Split"
@@ -255,7 +254,7 @@ export const Budget = ({ weddingData }) => {
               <div className="text-xs space-y-1">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">USD:</span>
-                  <span className="font-medium">${usdTotals.totalEstimated.toLocaleString()}</span>
+                  <span className="font-medium">${Math.round(usdTotals.totalBudget).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">INR:</span>

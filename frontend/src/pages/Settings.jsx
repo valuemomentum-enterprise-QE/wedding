@@ -99,6 +99,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   <Label htmlFor="bride">Bride</Label>
                   <Input
                     id="bride"
+                    name="bride"
                     value={settings.bride}
                     onChange={(e) => setSettings({ ...settings, bride: e.target.value })}
                     placeholder="Bride's name or initials"
@@ -108,6 +109,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   <Label htmlFor="groom">Groom</Label>
                   <Input
                     id="groom"
+                    name="groom"
                     value={settings.groom}
                     onChange={(e) => setSettings({ ...settings, groom: e.target.value })}
                     placeholder="Groom's name or initials"
@@ -117,10 +119,15 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Wedding Date</Label>
+                  <Label htmlFor="settings-wedding-date">Wedding Date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <Button
+                        id="settings-wedding-date"
+                        type="button"
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                      >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {format(settings.weddingDate, 'PPP')}
                       </Button>
@@ -139,6 +146,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   <Label htmlFor="location">Location</Label>
                   <Input
                     id="location"
+                    name="location"
                     value={settings.location}
                     onChange={(e) => setSettings({ ...settings, location: e.target.value })}
                     placeholder="Wedding location"
@@ -159,6 +167,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
               <Label htmlFor="plannerPasscode">Couple login passcode</Label>
               <Input
                 id="plannerPasscode"
+                name="plannerPasscode"
                 type="password"
                 value={settings.plannerPasscode}
                 onChange={(e) => setSettings({ ...settings, plannerPasscode: e.target.value })}
@@ -182,12 +191,12 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <Label>Primary Currency</Label>
+                  <Label htmlFor="settings-primary-currency">Primary Currency</Label>
                   <Select
                     value={settings.primaryCurrency}
                     onValueChange={(v) => setSettings({ ...settings, primaryCurrency: v })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger id="settings-primary-currency">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -199,12 +208,12 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   </Select>
                 </div>
                 <div>
-                  <Label>Secondary Currency</Label>
+                  <Label htmlFor="settings-secondary-currency">Secondary Currency</Label>
                   <Select
                     value={settings.secondaryCurrency}
                     onValueChange={(v) => setSettings({ ...settings, secondaryCurrency: v })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger id="settings-secondary-currency">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -219,6 +228,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                   <Label htmlFor="exchangeRate">Exchange Rate (USD to INR)</Label>
                   <Input
                     id="exchangeRate"
+                    name="exchangeRate"
                     type="number"
                     step="0.01"
                     value={settings.exchangeRate}
@@ -246,6 +256,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
                 <Label htmlFor="emails">Email Addresses</Label>
                 <Input
                   id="emails"
+                  name="emails"
                   value={settings.emails}
                   onChange={(e) => setSettings({ ...settings, emails: e.target.value })}
                   placeholder="email1@example.com, email2@example.com"

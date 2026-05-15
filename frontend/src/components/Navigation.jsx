@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, CheckSquare, DollarSign, Calendar, Users, UserCheck, Settings, Menu, X, Heart, LogOut } from 'lucide-react';
+import { Home, CheckSquare, DollarSign, Calendar, UserCheck, Settings, Menu, X, Heart, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { parseWeddingDate, formatWeddingDateShort } from '../lib/weddingUtils';
@@ -10,7 +10,6 @@ const buildNavItems = (prefix) => [
   { path: `${prefix}/tasks`, icon: CheckSquare, label: 'Tasks' },
   { path: `${prefix}/budget`, icon: DollarSign, label: 'Budget' },
   { path: `${prefix}/events`, icon: Calendar, label: 'Events' },
-  { path: `${prefix}/vendors`, icon: Users, label: 'Vendors' },
   { path: `${prefix}/guests`, icon: UserCheck, label: 'Guests' },
   { path: `${prefix}/settings`, icon: Settings, label: 'Settings' },
 ];
