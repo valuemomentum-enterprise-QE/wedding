@@ -48,7 +48,12 @@ export const Login = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label htmlFor="planner-login-passcode" className="sr-only">
+            Passcode
+          </label>
           <input
+            id="planner-login-passcode"
+            name="passcode"
             type="password"
             inputMode="numeric"
             autoComplete="current-password"

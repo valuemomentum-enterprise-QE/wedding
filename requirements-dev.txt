@@ -1,0 +1,4 @@
+# Local / CI integration tests (not required for Vercel runtime)
+-r requirements.txt
+pytest>=7.4.0
+requests>=2.31.0

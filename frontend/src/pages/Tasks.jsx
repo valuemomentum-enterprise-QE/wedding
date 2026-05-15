@@ -209,6 +209,7 @@ export const Tasks = () => {
                     <Label htmlFor="title">Title *</Label>
                     <Input
                       id="title"
+                      name="taskTitle"
                       value={newTask.title}
                       onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                       placeholder="Enter task title"
@@ -219,6 +220,7 @@ export const Tasks = () => {
                     <Label htmlFor="description">Description</Label>
                     <Textarea
                       id="description"
+                      name="taskDescription"
                       value={newTask.description}
                       onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                       placeholder="Task details..."
@@ -228,12 +230,12 @@ export const Tasks = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="category">Category *</Label>
+                      <Label htmlFor="task-category">Category *</Label>
                       <Select
                         value={newTask.category}
                         onValueChange={(value) => setNewTask({ ...newTask, category: value })}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="task-category">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -245,12 +247,12 @@ export const Tasks = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="priority">Priority</Label>
+                      <Label htmlFor="task-priority">Priority</Label>
                       <Select
                         value={newTask.priority}
                         onValueChange={(value) => setNewTask({ ...newTask, priority: value })}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="task-priority">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -266,6 +268,7 @@ export const Tasks = () => {
                     <Label htmlFor="assignedTo">Assigned To</Label>
                     <Input
                       id="assignedTo"
+                      name="taskAssignedTo"
                       value={newTask.assignedTo}
                       onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
                       placeholder="e.g., JD, JC"
@@ -273,10 +276,15 @@ export const Tasks = () => {
                   </div>
 
                   <div>
-                    <Label>Due Date</Label>
+                    <Label htmlFor="task-due-date">Due Date</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start text-left font-normal">
+                        <Button
+                          id="task-due-date"
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {newTask.dueDate ? format(newTask.dueDate, 'PPP') : 'Pick a date'}
                         </Button>
@@ -312,6 +320,7 @@ export const Tasks = () => {
                       <Label htmlFor="edit-title">Title *</Label>
                       <Input
                         id="edit-title"
+                        name="editTaskTitle"
                         value={editingTask.title}
                         onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
                         placeholder="Enter task title"
@@ -322,6 +331,7 @@ export const Tasks = () => {
                       <Label htmlFor="edit-description">Description</Label>
                       <Textarea
                         id="edit-description"
+                        name="editTaskDescription"
                         value={editingTask.description}
                         onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
                         placeholder="Task details..."
@@ -331,12 +341,12 @@ export const Tasks = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="edit-category">Category *</Label>
+                        <Label htmlFor="edit-task-category">Category *</Label>
                         <Select
                           value={editingTask.category}
                           onValueChange={(value) => setEditingTask({ ...editingTask, category: value })}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger id="edit-task-category">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                           <SelectContent>
@@ -348,12 +358,12 @@ export const Tasks = () => {
                       </div>
 
                       <div>
-                        <Label htmlFor="edit-priority">Priority</Label>
+                        <Label htmlFor="edit-task-priority">Priority</Label>
                         <Select
                           value={editingTask.priority}
                           onValueChange={(value) => setEditingTask({ ...editingTask, priority: value })}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger id="edit-task-priority">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -369,6 +379,7 @@ export const Tasks = () => {
                       <Label htmlFor="edit-assignedTo">Assigned To</Label>
                       <Input
                         id="edit-assignedTo"
+                        name="editTaskAssignedTo"
                         value={editingTask.assignedTo}
                         onChange={(e) => setEditingTask({ ...editingTask, assignedTo: e.target.value })}
                         placeholder="e.g., JD, JC"
@@ -376,10 +387,15 @@ export const Tasks = () => {
                     </div>
 
                     <div>
-                      <Label>Due Date</Label>
+                      <Label htmlFor="edit-task-due-date">Due Date</Label>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className="w-full justify-start text-left font-normal">
+                          <Button
+                            id="edit-task-due-date"
+                            type="button"
+                            variant="outline"
+                            className="w-full justify-start text-left font-normal"
+                          >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {editingTask.dueDate ? format(parseWeddingDate(editingTask.dueDate), 'PPP') : 'Pick a date'}
                           </Button>

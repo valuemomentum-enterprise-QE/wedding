@@ -128,16 +128,21 @@ export const Budget = ({ weddingData }) => {
                 <p className="text-xs text-destructive mt-2" role="alert">{syncError}</p>
               )}
             </div>
-            <div className="flex gap-3">
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USD">USD ($)</SelectItem>
-                  <SelectItem value="INR">INR (₹)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-3 items-end flex-wrap">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="budget-view-currency" className="text-xs text-muted-foreground">
+                  View currency
+                </Label>
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger id="budget-view-currency" className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="INR">INR (₹)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="btn-glow">
@@ -151,9 +156,9 @@ export const Budget = ({ weddingData }) => {
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
                     <div>
-                      <Label>Category *</Label>
+                      <Label htmlFor="budget-add-category">Category *</Label>
                       <Select value={newItem.category} onValueChange={(v) => setNewItem({ ...newItem, category: v })}>
-                        <SelectTrigger>
+                        <SelectTrigger id="budget-add-category">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -164,8 +169,10 @@ export const Budget = ({ weddingData }) => {
                       </Select>
                     </div>
                     <div>
-                      <Label>Description *</Label>
+                      <Label htmlFor="budget-add-description">Description *</Label>
                       <Input
+                        id="budget-add-description"
+                        name="budgetDescription"
                         value={newItem.description}
                         onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
                         placeholder="Item description"
@@ -173,8 +180,10 @@ export const Budget = ({ weddingData }) => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label>Estimated Cost *</Label>
+                        <Label htmlFor="budget-add-estimated">Estimated Cost *</Label>
                         <Input
+                          id="budget-add-estimated"
+                          name="budgetEstimatedCost"
                           type="number"
                           value={newItem.estimatedCost}
                           onChange={(e) => setNewItem({ ...newItem, estimatedCost: e.target.value })}
@@ -182,8 +191,10 @@ export const Budget = ({ weddingData }) => {
                         />
                       </div>
                       <div>
-                        <Label>Actual Cost</Label>
+                        <Label htmlFor="budget-add-actual">Actual Cost</Label>
                         <Input
+                          id="budget-add-actual"
+                          name="budgetActualCost"
                           type="number"
                           value={newItem.actualCost}
                           onChange={(e) => setNewItem({ ...newItem, actualCost: e.target.value })}
@@ -193,9 +204,9 @@ export const Budget = ({ weddingData }) => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label>Currency</Label>
+                        <Label htmlFor="budget-add-currency">Currency</Label>
                         <Select value={newItem.currency} onValueChange={(v) => setNewItem({ ...newItem, currency: v })}>
-                          <SelectTrigger>
+                          <SelectTrigger id="budget-add-currency">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -205,8 +216,10 @@ export const Budget = ({ weddingData }) => {
                         </Select>
                       </div>
                       <div>
-                        <Label>Paid By</Label>
+                        <Label htmlFor="budget-add-paid-by">Paid By</Label>
                         <Input
+                          id="budget-add-paid-by"
+                          name="budgetPaidBy"
                           value={newItem.paidBy}
                           onChange={(e) => setNewItem({ ...newItem, paidBy: e.target.value })}
                           placeholder="e.g., JD, Split"

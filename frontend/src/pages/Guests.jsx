@@ -149,16 +149,20 @@ export const Guests = () => {
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
                     <div>
-                      <Label>Name *</Label>
+                      <Label htmlFor="add-guest-name">Name *</Label>
                       <Input
+                        id="add-guest-name"
+                        name="guestName"
                         value={newGuest.name}
                         onChange={(e) => setNewGuest({ ...newGuest, name: e.target.value })}
                         placeholder="Guest name"
                       />
                     </div>
                     <div>
-                      <Label>Email</Label>
+                      <Label htmlFor="add-guest-email">Email</Label>
                       <Input
+                        id="add-guest-email"
+                        name="guestEmail"
                         type="email"
                         value={newGuest.email}
                         onChange={(e) => setNewGuest({ ...newGuest, email: e.target.value })}
@@ -166,8 +170,10 @@ export const Guests = () => {
                       />
                     </div>
                     <div>
-                      <Label>Phone</Label>
+                      <Label htmlFor="add-guest-phone">Phone</Label>
                       <Input
+                        id="add-guest-phone"
+                        name="guestPhone"
                         type="tel"
                         value={newGuest.phone}
                         onChange={(e) => setNewGuest({ ...newGuest, phone: e.target.value })}
@@ -175,12 +181,12 @@ export const Guests = () => {
                       />
                     </div>
                     <div>
-                      <Label>Guest Type</Label>
+                      <Label htmlFor="add-guest-type">Guest Type</Label>
                       <Select
                         value={newGuest.guestType}
                         onValueChange={(v) => setNewGuest({ ...newGuest, guestType: v })}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="add-guest-type">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
