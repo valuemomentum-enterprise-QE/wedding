@@ -21,9 +21,9 @@ export const PlannerLayout = ({ weddingData, updateWeddingData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background planner-shell">
+    <div className="min-h-screen bg-background planner-shell overflow-x-hidden max-w-[100vw]">
       <Navigation weddingData={weddingData} plannerPrefix={PLANNER_PREFIX} onLogout={handleLogout} />
-      <main className="pb-20 md:pb-0 md:ml-64">
+      <main className="pb-mobile-nav md:pb-0 md:ml-64 overflow-x-hidden max-w-full">
         <div className="hidden md:flex justify-end px-6 py-3 border-b border-border/40 bg-card/50">
           <button
             type="button"

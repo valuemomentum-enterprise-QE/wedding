@@ -48,7 +48,7 @@ export const Events = () => {
   };
 
   return (
-    <div className="min-h-screen pt-14 md:pt-0">
+    <div className="min-h-screen pt-mobile-header md:pt-0 overflow-x-hidden">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
         <div className="container-custom py-8 md:py-12">
@@ -69,28 +69,28 @@ export const Events = () => {
                 <div className="absolute left-6 top-12 bottom-0 w-0.5 bg-gradient-to-b from-primary via-secondary to-accent" />
               )}
 
-              <div className="flex gap-6">
+              <div className="flex flex-col xs:flex-row gap-4 xs:gap-6 min-w-0">
                 {/* Date indicator */}
-                <div className="relative flex flex-col items-center">
+                <div className="relative flex flex-row xs:flex-col items-center xs:items-center gap-3 xs:gap-0 shrink-0">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[var(--shadow-soft)] z-10">
                     <Calendar className="w-5 h-5 text-primary-foreground" />
                   </div>
-                  <div className="mt-2 text-center">
+                  <div className="xs:mt-2 text-center">
                     <p className="text-xs font-medium">{format(eventDate, 'MMM')}</p>
                     <p className="text-lg font-semibold">{format(eventDate, 'd')}</p>
                   </div>
                 </div>
 
                 {/* Event card */}
-                <Card className="flex-1 card-elegant hover:shadow-[var(--shadow-medium)] transition-shadow">
-                  <CardContent className="pt-6">
+                <Card className="flex-1 min-w-0 card-elegant hover:shadow-[var(--shadow-medium)] transition-shadow">
+                  <CardContent className="pt-4 sm:pt-6">
                     <div className="flex items-start justify-between mb-3">
                       <Badge className={`${getEventTypeColor(event.type)}`}>
                         {event.type}
                       </Badge>
                     </div>
                     
-                    <h3 className="text-xl font-semibold mb-3">{event.name}</h3>
+                    <h3 className="text-base sm:text-xl font-semibold mb-3 break-words">{event.name}</h3>
                     
                     {event.description && (
                       <p className="text-sm text-muted-foreground mb-4">{event.description}</p>

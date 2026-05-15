@@ -134,8 +134,8 @@ export const Tasks = () => {
     <Card className="mb-3 hover:shadow-[var(--shadow-medium)] transition-shadow cursor-pointer">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h4 className="font-medium text-sm mb-1">{task.title}</h4>
+          <div className="flex-1 min-w-0">
+            <h4 className="font-medium text-sm mb-1 break-words">{task.title}</h4>
             {task.description && (
               <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
             )}
@@ -179,14 +179,14 @@ export const Tasks = () => {
           </div>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           {TASK_STATUSES.map(status => (
             <Button
               key={status}
               size="sm"
               variant={task.status === status ? 'default' : 'outline'}
               onClick={() => updateTaskStatus(task.id, status)}
-              className="text-xs flex-1"
+              className="text-xs flex-1 min-h-10"
             >
               {status === 'not-started' && 'To Do'}
               {status === 'in-progress' && 'In Progress'}
@@ -199,7 +199,7 @@ export const Tasks = () => {
   );
 
   return (
-    <div className="min-h-screen pt-14 md:pt-0">
+    <div className="min-h-screen pt-mobile-header md:pt-0 overflow-x-hidden">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
         <div className="container-custom py-8 md:py-12">
@@ -241,7 +241,7 @@ export const Tasks = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="category">Category *</Label>
                       <Select
@@ -344,7 +344,7 @@ export const Tasks = () => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="edit-category">Category *</Label>
                         <Select

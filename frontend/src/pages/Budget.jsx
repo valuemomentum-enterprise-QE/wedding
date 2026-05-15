@@ -133,7 +133,7 @@ export const Budget = ({ weddingData }) => {
   }));
 
   return (
-    <div className="min-h-screen pt-14 md:pt-0">
+    <div className="min-h-screen pt-mobile-header md:pt-0 overflow-x-hidden">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
         <div className="container-custom py-8 md:py-12">
@@ -185,7 +185,7 @@ export const Budget = ({ weddingData }) => {
                         placeholder="Item description"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label>Estimated Cost *</Label>
                         <Input
@@ -205,7 +205,7 @@ export const Budget = ({ weddingData }) => {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label>Currency</Label>
                         <Select value={newItem.currency} onValueChange={(v) => setNewItem({ ...newItem, currency: v })}>
@@ -327,7 +327,7 @@ export const Budget = ({ weddingData }) => {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 text-sm">
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">Estimated</p>
                         <p className="font-medium">

@@ -77,7 +77,7 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
     : 0;
 
   return (
-    <div className="min-h-screen pt-14 md:pt-0">
+    <div className="min-h-screen pt-mobile-header md:pt-0 overflow-x-hidden">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-peach/40 via-cream to-secondary/30 border-b border-border/50">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1654156577076-e0350ba86cc1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHxTb3V0aCUyMEluZGlhbiUyMHdlZGRpbmd8ZW58MHx8fHwxNzc3NzY0ODIxfDA&ixlib=rb-4.1.0&q=85')] bg-cover bg-center opacity-5" />
@@ -89,7 +89,7 @@ export const Dashboard = ({ weddingData, plannerPrefix = '/planner' }) => {
                 Your Dream Wedding
               </Badge>
             </div>
-            <h1 className="heading-hero font-display tracking-wide text-foreground mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight font-display tracking-wide text-foreground mb-4 break-words">
               {daysUntilWedding} Days Until Your Big Day
             </h1>
             <p className="body-large text-muted-foreground mb-6">

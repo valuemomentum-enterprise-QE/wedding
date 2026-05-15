@@ -68,7 +68,7 @@ export const Settings = ({ weddingData, updateWeddingData }) => {
   };
 
   return (
-    <div className="min-h-screen pt-14 md:pt-0">
+    <div className="min-h-screen pt-mobile-header md:pt-0 overflow-x-hidden">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
         <div className="container-custom py-8 md:py-12">
